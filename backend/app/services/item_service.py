@@ -12,6 +12,7 @@ from app.schemas.item import (
     ItemResponse,
     ItemListResponse
 )
+from app.services.audit_service import log_audit_event
 import logging
 
 logger = logging.getLogger("ownly.services.item")
@@ -19,6 +20,7 @@ logger = logging.getLogger("ownly.services.item")
 
 class ItemService:
     def __init__(self, db: AsyncIOMotorDatabase):
+        self.db = db
         self.item_repo = ItemRepository(db)
         self.col_repo = CollectionRepository(db)
         self.file_repo = FileRepository(db)
@@ -115,6 +117,15 @@ class ItemService:
             event_date=req.eventDate,
             expires_at=req.expiresAt
         )
+        await log_audit_event(
+            self.db,
+            actor_user_id=owner_id,
+            action="item.create",
+            resource_type="item",
+            resource_id=item["id"],
+            outcome="success",
+            metadata={"title": item["title"], "kind": item["kind"]},
+        )
         return ItemResponse(**item)
 
     async def update_item(self, item_id: str, req: ItemUpdateRequest, owner_id: str) -> ItemResponse:
@@ -163,6 +174,14 @@ class ItemService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Item not found."
             )
+        await log_audit_event(
+            self.db,
+            actor_user_id=owner_id,
+            action="item.delete",
+            resource_type="item",
+            resource_id=item_id,
+            outcome="success",
+        )
 
     async def restore_item(self, item_id: str, owner_id: str) -> ItemResponse:
         restored = await self.item_repo.restore_item(item_id, owner_id)
@@ -171,5 +190,13 @@ class ItemService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Item not found in trash."
             )
+        await log_audit_event(
+            self.db,
+            actor_user_id=owner_id,
+            action="item.restore",
+            resource_type="item",
+            resource_id=item_id,
+            outcome="success",
+        )
         return ItemResponse(**restored)
 

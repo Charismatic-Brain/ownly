@@ -22,10 +22,10 @@ Ownly is a full-stack personal digital life-management platform built with a mod
 
 ---
 
-## Current Status: Milestones 1 through 5 Complete
+## Current Status: Milestones 1 through 7 Complete
 
 - [x] **Project Scaffolding:** Clean `backend/` and `frontend/` workspaces initialized.
-- [x] **Database Connectivity & Indexes:** Async connection management, health check (`GET /api/health`), and idempotent index creation for `users`, `vault_collections`, `items`, `file_assets`, and `audit_logs`.
+- [x] **Database Connectivity & Indexes:** Async connection management, health check (`GET /api/health`), and idempotent index creation for `users`, `vault_collections`, `items`, `file_assets`, `reminders`, `transactions`, `bills`, `albums`, `media_assets`, and `audit_logs`.
 - [x] **Authentication Slice:** Registration (`POST /api/auth/register`), Login (`POST /api/auth/login`), Logout (`POST /api/auth/logout`), and Protected Profile (`GET /api/auth/me`).
 - [x] **Security:** Argon2id password hashing, JWT bearer tokens, email normalization, min password lengths, non-leaking user schemas.
 - [x] **User-Defined Collections (Milestone 2):**
@@ -56,7 +56,25 @@ Ownly is a full-stack personal digital life-management platform built with a mod
   - Status management (`pending`, `completed`, `snoozed`, `dismissed`) with dynamic quick-snooze calculations (+1d, +7d).
   - Unified Deadlines Aggregator (`GET /api/reminders/upcoming`): Real-time collation of in-app reminders and expiring vault documents grouped into Overdue, Due Today, Due This Week, and Upcoming.
   - Frontend Interface: Comprehensive Reminders & Deadlines page (`/reminders`), quick create modal (`CreateReminderModal`), linked document inspections, and dashboard integration.
-- [x] **Automated Tests:** 23/23 pytest tests passing against live MongoDB instance.
+- [x] **Personal Finance and Memories (Milestone 6):**
+  - Personal Finance Tracking: Exact integer minor-unit paise calculations (`amountPaise: int`) avoiding floating-point rounding errors.
+  - Transactions API (`GET /api/transactions`, `POST /api/transactions`, `PATCH /api/transactions/{id}`, `DELETE /api/transactions/{id}`).
+  - Recurring Bills & Subscriptions (`GET /api/bills`, `POST /api/bills`, `PATCH /api/bills/{id}`, `POST /api/bills/{id}/pay`).
+  - Real-Time Aggregation Summaries (`GET /api/finance/summary`): Monthly income vs expenses, category spending breakdowns with percentages, 6-month historical trends, and active recurring commitments.
+  - Memories & Photo Albums: `albums` and `media_assets` collections backed by MongoDB GridFS private media streaming.
+  - Media Upload & Streaming (`POST /api/media/upload`, `GET /api/media/{id}/preview`, `GET /api/media/{id}/download`).
+  - Memories Timeline (`GET /api/media/timeline`): Chronological media grouping by month and year.
+  - Frontend Pages: Responsive Finance Dashboard (`/finance`) and Memories Gallery & Lightbox (`/memories`).
+- [x] **Family Sharing and Security Audit (Milestone 7):**
+  - Family Groups: `families` and `family_members` collections with role-based governance (`admin`, `member`) and invitation status flows (`pending`, `accepted`, `rejected`).
+  - Member Management: Invitation by normalized email (`POST /api/families/{id}/invites`), pending invitation review and response (`POST /api/families/invites/{id}/respond`), and member offboarding (`DELETE /api/families/{id}/members/{userId}`).
+  - Granular Item-Level Sharing: Scoped share grants (`shares` collection) supporting `view` and `edit` permissions with optional expiry dates.
+  - Strict Security Isolation: Access verification ensures sharing one item never leaks the owner's vault or unshared items.
+  - Immediate Access Revocation: `DELETE /api/shares/{id}` immediately terminates access to shared items and attachments.
+  - Authorized Shared File Streaming: Securely download and preview attachments of shared items with safe `Content-Disposition`.
+  - Immutable Security Audit Trail: `audit_logs` collection logging all authentication, item mutations, sharing grants, and access checks with sanitized metadata.
+  - Frontend Interface: Comprehensive Family Vault page (`/family`), granular `ShareItemModal`, and real-time Activity & Audit Feed (`/activity`).
+- [x] **Automated Tests:** 34/34 pytest tests passing against live MongoDB instance.
 
 ---
 
@@ -109,9 +127,9 @@ pytest tests -v
 
 ---
 
-## Next Milestone: Milestone 6 — Finance and Memories
-* Personal finance & bills tracking (`transactions`, `bills` collections) with Decimal128 / integer minor units.
-* Monthly & category spending aggregation pipelines.
-* Memories module (`albums`, `media_assets` collections) with GridFS photo/video storage and timeline view.
+## Next Milestone: Milestone 8 — Polish, Synthetic Seed Data, and Delivery
+* Comprehensive synthetic seed data script (`python backend/scripts/seed_demo_data.py`) creating realistic demo users, collections, notes, bills, memories, and family shares.
+* System-wide edge-case testing, error states, and UX polish.
+* Final deployment documentation and verification.
 
 

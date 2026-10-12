@@ -20,17 +20,24 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+interface NavItem {
+  name: string;
+  to: string;
+  icon: any;
+  badge?: string;
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  const navItems = [
+  const navItems: NavItem[] = [
     { name: 'Overview', to: '/', icon: LayoutDashboard },
     { name: 'My Vault', to: '/vault', icon: FolderLock },
     { name: 'Search', to: '/search', icon: Search },
     { name: 'Trash', to: '/trash', icon: Trash2 },
-    { name: 'Memories', to: '/memories', icon: Image, badge: 'P1' },
-    { name: 'Finance & Bills', to: '/finance', icon: Wallet, badge: 'P1' },
-    { name: 'Family Vault', to: '/family', icon: Users, badge: 'P1' },
+    { name: 'Memories', to: '/memories', icon: Image },
+    { name: 'Finance & Bills', to: '/finance', icon: Wallet },
+    { name: 'Family Vault', to: '/family', icon: Users },
     { name: 'Reminders', to: '/reminders', icon: Bell },
-    { name: 'Activity', to: '/activity', icon: Activity, badge: 'P1' },
+    { name: 'Activity', to: '/activity', icon: Activity },
     { name: 'Settings', to: '/settings', icon: Settings },
   ];
 

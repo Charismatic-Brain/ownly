@@ -15,8 +15,12 @@ import logging
 logger = logging.getLogger("ownly.services.auth")
 
 
+from app.services.audit_service import log_audit_event
+
+
 class AuthService:
     def __init__(self, db: AsyncIOMotorDatabase):
+        self.db = db
         self.repo = UserRepository(db)
 
     async def register(self, req: UserRegisterRequest) -> TokenResponse:
@@ -40,6 +44,15 @@ class AuthService:
             email=user_dict["email"]
         )
 
+        await log_audit_event(
+            self.db,
+            actor_user_id=user_dict["id"],
+            action="auth.register",
+            resource_type="user",
+            resource_id=user_dict["id"],
+            outcome="success",
+        )
+
         return TokenResponse(
             accessToken=token,
             expiresIn=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
@@ -55,6 +68,14 @@ class AuthService:
             )
 
         if not verify_password(req.password, user_doc.get("passwordHash", "")):
+            await log_audit_event(
+                self.db,
+                actor_user_id=str(user_doc["_id"]),
+                action="auth.login",
+                resource_type="user",
+                resource_id=str(user_doc["_id"]),
+                outcome="denied",
+            )
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password."
@@ -64,6 +85,15 @@ class AuthService:
         token = create_access_token(
             user_id=user_dict["id"],
             email=user_dict["email"]
+        )
+
+        await log_audit_event(
+            self.db,
+            actor_user_id=user_dict["id"],
+            action="auth.login",
+            resource_type="user",
+            resource_id=user_dict["id"],
+            outcome="success",
         )
 
         return TokenResponse(

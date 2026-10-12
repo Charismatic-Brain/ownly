@@ -16,6 +16,11 @@ from app.api.routes.dashboard import router as dashboard_router
 from app.api.routes.search import router as search_router
 from app.api.routes.trash import router as trash_router
 from app.api.routes.reminders import router as reminders_router
+from app.api.routes.finance import router as finance_router
+from app.api.routes.memories import router as memories_router
+from app.api.routes.family import router as family_router
+from app.api.routes.sharing import router as sharing_router
+from app.api.routes.audit import router as audit_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -75,6 +80,11 @@ app.include_router(dashboard_router, prefix="/api")
 app.include_router(search_router, prefix="/api")
 app.include_router(trash_router, prefix="/api")
 app.include_router(reminders_router, prefix="/api")
+app.include_router(finance_router, prefix="/api")
+app.include_router(memories_router, prefix="/api")
+app.include_router(family_router, prefix="/api")
+app.include_router(sharing_router, prefix="/api")
+app.include_router(audit_router, prefix="/api")
 
 
 @app.get("/", summary="Root status")

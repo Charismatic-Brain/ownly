@@ -17,10 +17,12 @@ import {
   Paperclip,
   Upload,
   Loader2,
-  FileCheck
+  FileCheck,
+  Share2
 } from 'lucide-react';
 import type { Item, Collection } from '../types';
 import { vaultApi } from '../lib/vaultApi';
+import { ShareItemModal } from './ShareItemModal';
 
 interface ItemDetailModalProps {
   item: Item | null;
@@ -42,6 +44,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [uploadingAttachment, setUploadingAttachment] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!item) return null;
@@ -369,14 +372,23 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800 bg-slate-850/50">
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-600/80 transition-colors"
-          >
-            <Trash2 className="w-4 h-4" />
-            <span>Move to Trash</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShareOpen(true)}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-brand-400 hover:text-white hover:bg-brand-500/20 border border-brand-500/30 transition-colors"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share</span>
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-600/80 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Move to Trash</span>
+            </button>
+          </div>
 
           <button
             onClick={onClose}
@@ -386,6 +398,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           </button>
         </div>
       </div>
+
+      <ShareItemModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        resourceId={item.id}
+        resourceTitle={item.title}
+        resourceType="item"
+      />
     </div>
   );
 };
