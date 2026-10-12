@@ -22,12 +22,12 @@ Ownly is a full-stack personal digital life-management platform built with a mod
 
 ---
 
-## Current Status: Milestones 1 through 7 Complete
+## Current Status: All Milestones 1 through 8 Complete
 
 - [x] **Project Scaffolding:** Clean `backend/` and `frontend/` workspaces initialized.
 - [x] **Database Connectivity & Indexes:** Async connection management, health check (`GET /api/health`), and idempotent index creation for `users`, `vault_collections`, `items`, `file_assets`, `reminders`, `transactions`, `bills`, `albums`, `media_assets`, and `audit_logs`.
-- [x] **Authentication Slice:** Registration (`POST /api/auth/register`), Login (`POST /api/auth/login`), Logout (`POST /api/auth/logout`), and Protected Profile (`GET /api/auth/me`).
-- [x] **Security:** Argon2id password hashing, JWT bearer tokens, email normalization, min password lengths, non-leaking user schemas.
+- [x] **Authentication Slice (Milestone 1):** Registration (`POST /api/auth/register`), Login (`POST /api/auth/login`), Logout (`POST /api/auth/logout`), and Protected Profile (`GET /api/auth/me`).
+- [x] **Security:** Argon2id password hashing (`argon2-cffi`), JWT bearer tokens, email normalization, min password lengths, non-leaking user schemas.
 - [x] **User-Defined Collections (Milestone 2):**
   - Collection CRUD (`GET /api/collections`, `POST /api/collections`, `PATCH /api/collections/{id}`, `DELETE /api/collections/{id}`).
   - Hierarchy & nesting support (`parentId`) with cycle detection and ancestor verification.
@@ -74,7 +74,34 @@ Ownly is a full-stack personal digital life-management platform built with a mod
   - Authorized Shared File Streaming: Securely download and preview attachments of shared items with safe `Content-Disposition`.
   - Immutable Security Audit Trail: `audit_logs` collection logging all authentication, item mutations, sharing grants, and access checks with sanitized metadata.
   - Frontend Interface: Comprehensive Family Vault page (`/family`), granular `ShareItemModal`, and real-time Activity & Audit Feed (`/activity`).
-- [x] **Automated Tests:** 34/34 pytest tests passing against live MongoDB instance.
+- [x] **Polish, Synthetic Demo Seed Data & Delivery (Milestone 8):**
+  - Synthetic Demo Seed Script: `backend/scripts/seed_demo_data.py` generating realistic demo users, collections, notes, GridFS documents, bills, photo albums, family group, and cross-account item shares.
+  - Settings & Cryptographic Specifications Page: Responsive [`SettingsPage.tsx`](file:///home/shubham/.gemini/antigravity/scratch/ownly/frontend/src/pages/SettingsPage.tsx) displaying profile information, encryption parameters, demo credentials, and session controls.
+  - Production Build: Full TypeScript verification (`tsc -b`) and Vite production bundle generated cleanly.
+  - Comprehensive Testing: **35/35 backend tests passing** across 9 test suites.
+
+---
+
+## Synthetic Demo Data & Ready-to-Use Accounts
+
+Ownly provides pre-seeded synthetic demo data for immediate testing and evaluation:
+
+### Demo Accounts
+
+| Role | Email | Password |
+|---|---|---|
+| **Primary Account (Family Admin)** | `demo@ownly.dev` | `DemoPassword123!` |
+| **Partner Account (Family Member)** | `partner@ownly.dev` | `DemoPassword123!` |
+
+### Re-seeding Synthetic Demo Records
+
+To reset or populate the development database with synthetic data:
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/seed_demo_data.py
+```
 
 ---
 
@@ -97,11 +124,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 
+# Optional: Seed synthetic demo records
+python scripts/seed_demo_data.py
+
 # Run FastAPI server
 uvicorn app.main:app --reload --port 8000
 ```
 
-The API docs will be available at: `http://localhost:8000/docs`
+The interactive API documentation is available at: `http://localhost:8000/docs`
 
 ### 2. Frontend Setup
 
@@ -113,23 +143,38 @@ npm install
 npm run dev
 ```
 
-The app will be available at: `http://localhost:5173` (proxies `/api` to the backend on port 8000).
+The web application will be accessible at: `http://localhost:5173` (configured to proxy `/api` requests to backend port 8000).
 
 ---
 
-## Running Tests
+## Running Automated Tests
 
-From the `backend/` directory with virtual environment activated:
+Run the complete test suite against your live MongoDB instance:
 
 ```bash
+cd backend
+source .venv/bin/activate
 pytest tests -v
 ```
 
+All 35 tests pass with full isolation, testing authentication, collections, GridFS files, universal search, reminders, finance calculations, memories, family groups, and access boundaries.
+
 ---
 
-## Next Milestone: Milestone 8 — Polish, Synthetic Seed Data, and Delivery
-* Comprehensive synthetic seed data script (`python backend/scripts/seed_demo_data.py`) creating realistic demo users, collections, notes, bills, memories, and family shares.
-* System-wide edge-case testing, error states, and UX polish.
-* Final deployment documentation and verification.
+## Security Architecture & Design Decisions
+
+1. **Password Hashing:** Implemented with Argon2id (`argon2-cffi`) using salt generation and memory-hard parameters conforming to RFC 9106.
+2. **JWT Authentication:** Stateless HMAC-SHA256 bearer tokens with 24-hour expiration. Identity is derived strictly from verified claims; client-supplied `ownerId` values are rejected.
+3. **Strict Owner Isolation & IDOR Defense:** Every query for owned resources scopes by both resource ID and caller's `ownerId`. Knowing another user's ObjectId never grants access.
+4. **Binary Asset Protection:** Binary documents and photos are stored in private MongoDB GridFS buckets. They are streamed strictly through authenticated and authorized backend endpoints with safe `Content-Disposition` and MIME type allowlists.
+5. **Exact Integer Minor Units for Currency:** All monetary amounts are recorded in integer paise (`amountPaise: int`) to eliminate floating-point rounding errors in calculations and aggregations.
+6. **Immutable Audit Logging:** Key security and mutation actions (`auth.*`, `item.*`, `share.*`, `family.*`) are recorded with timestamps, actor IDs, and sanitized metadata (passwords and secrets are strictly redacted).
+
+---
+
+## Known Limitations
+
+- **Email Delivery:** In-app reminders and invitations are fully functional; SMTP/SES delivery is optional and omitted locally to avoid unsolicited external communications during testing.
+- **Single-Database Deployment:** MongoDB serves as both the document store and GridFS binary repository to allow self-contained local development without requiring external S3/cloud dependencies.
 
 

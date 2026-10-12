@@ -14,6 +14,7 @@ import { FinancePage } from './pages/FinancePage';
 import { MemoriesPage } from './pages/MemoriesPage';
 import { FamilyPage } from './pages/FamilyPage';
 import { ActivityPage } from './pages/ActivityPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ export function App() {
               <Route path="family" element={<FamilyPage />} />
               <Route path="reminders" element={<RemindersPage />} />
               <Route path="activity" element={<ActivityPage />} />
+              <Route path="settings" element={<SettingsPage />} />
               <Route path="search" element={<SearchPage />} />
               <Route path="trash" element={<TrashPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
