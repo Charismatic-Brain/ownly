@@ -5,23 +5,47 @@ import {
   Plus,
   Search,
   Star,
-  FileText,
-  Link as LinkIcon,
-  Layers,
   Folder,
+  FolderOpen,
+  Heart,
+  Briefcase,
+  Landmark,
+  FileText,
+  Shield,
+  Car,
+  Plane,
+  Key,
   Trash2,
-  Tag,
-  Clock,
   Sparkles,
-  ExternalLink,
-  ChevronRight,
-  Paperclip
+  X,
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
 import { CreateItemModal } from '../components/CreateItemModal';
 import { ItemDetailModal } from '../components/ItemDetailModal';
-import type { Item, Collection, ItemKind } from '../types';
+import { ItemCard, pluralize } from '../components/ItemCard';
+import type { Item, Collection } from '../types';
+
+// Collections store a lucide icon *name* (see CreateCollectionModal), not an emoji.
+const COLLECTION_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  folder: Folder,
+  'heart-pulse': Heart,
+  briefcase: Briefcase,
+  landmark: Landmark,
+  'file-text': FileText,
+  shield: Shield,
+  car: Car,
+  plane: Plane,
+  key: Key,
+};
+
+const KIND_FILTERS = [
+  { label: 'All', value: '' },
+  { label: 'Files', value: 'file' },
+  { label: 'Notes', value: 'note' },
+  { label: 'Links', value: 'link' },
+  { label: 'Records', value: 'record' },
+];
 
 export const VaultPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -108,356 +132,208 @@ export const VaultPage: React.FC = () => {
     return currentCollection?.name || 'Collection';
   };
 
-  const getItemKindBadge = (kind: ItemKind) => {
-    switch (kind) {
-      case 'file':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20">
-            <Paperclip className="w-3 h-3" />
-            <span>File</span>
-          </span>
-        );
-      case 'note':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <FileText className="w-3 h-3" />
-            <span>Note</span>
-          </span>
-        );
-      case 'link':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
-            <LinkIcon className="w-3 h-3" />
-            <span>Link</span>
-          </span>
-        );
-      case 'record':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Layers className="w-3 h-3" />
-            <span>Record</span>
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  const navBtn = (active: boolean) =>
+    `relative flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors ${
+      active
+        ? 'bg-brand-500/10 text-brand-200'
+        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'
+    }`;
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <FolderLock className="w-6 h-6 text-brand-400" />
-            <span>My Vault</span>
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Organize personal documents, notes, links, and structured records into custom collections.
+    <div className="mx-auto max-w-7xl space-y-8">
+      {/* Page header */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-3xl font-bold tracking-tight text-white">My Vault</h1>
+          <p className="mt-1.5 max-w-xl text-sm text-slate-400">
+            Documents, notes, links and records, organised into your own collections.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => setIsCreateColOpen(true)}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-200 text-sm font-medium transition-colors border border-slate-700"
-          >
-            <Folder className="w-4 h-4 text-brand-400" />
-            <span>New Collection</span>
+        <div className="flex shrink-0 items-center gap-2.5">
+          <button onClick={() => setIsCreateColOpen(true)} className="btn-ghost">
+            <Folder className="h-4 w-4 text-brand-300" />
+            New collection
           </button>
-          <button
-            onClick={() => setIsCreateItemOpen(true)}
-            className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium transition-colors shadow-lg shadow-brand-600/20"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Item</span>
+          <button onClick={() => setIsCreateItemOpen(true)} className="btn-primary">
+            <Plus className="h-4 w-4" />
+            Add item
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Main Vault Workspace (Split Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        {/* Left Column: Collections List */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between px-2 pt-1">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Collections
-            </h3>
-            <span className="text-[11px] font-medium text-slate-500">
-              {collections.length} total
-            </span>
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)]">
+        {/* Collections rail */}
+        <aside className="panel p-3 lg:sticky lg:top-24">
+          <div className="flex items-center justify-between px-3 pb-2 pt-1.5">
+            <h3 className="text-sm font-semibold text-slate-200">Collections</h3>
+            <span className="text-xs tabular-nums text-slate-500">{collections.length}</span>
           </div>
 
-          <div className="space-y-1">
-            {/* All Items */}
-            <button
-              onClick={() => setSelectedCollectionId(null)}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                selectedCollectionId === null
-                  ? 'bg-brand-600/15 text-brand-400 border border-brand-500/25'
-                  : 'text-slate-300 hover:bg-slate-800/60'
-              }`}
-            >
-              <div className="flex items-center space-x-2.5">
-                <FolderLock className="w-4 h-4" />
-                <span>All Vault Items</span>
-              </div>
+          <nav className="space-y-0.5">
+            <button onClick={() => setSelectedCollectionId(null)} className={navBtn(selectedCollectionId === null)}>
+              <FolderLock className="h-4 w-4 shrink-0" />
+              <span className="truncate">All items</span>
             </button>
-
-            {/* Uncollected Items */}
-            <button
-              onClick={() => setSelectedCollectionId('none')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                selectedCollectionId === 'none'
-                  ? 'bg-brand-600/15 text-brand-400 border border-brand-500/25'
-                  : 'text-slate-300 hover:bg-slate-800/60'
-              }`}
-            >
-              <div className="flex items-center space-x-2.5">
-                <Folder className="w-4 h-4 text-slate-400" />
-                <span>Uncollected</span>
-              </div>
+            <button onClick={() => setSelectedCollectionId('none')} className={navBtn(selectedCollectionId === 'none')}>
+              <FolderOpen className="h-4 w-4 shrink-0" />
+              <span className="truncate">Uncollected</span>
             </button>
-          </div>
+          </nav>
 
-          {/* User Collections */}
           {collections.length > 0 && (
-            <div className="pt-2 border-t border-slate-800/80 space-y-1">
-              <span className="block px-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                Your Folders
-              </span>
-              {collections.map((col) => (
-                <div
-                  key={col.id}
-                  className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
-                    selectedCollectionId === col.id
-                      ? 'bg-brand-600/15 text-brand-400 border border-brand-500/25'
-                      : 'text-slate-300 hover:bg-slate-800/60'
-                  }`}
-                  onClick={() => setSelectedCollectionId(col.id)}
-                >
-                  <div className="flex items-center space-x-2.5 truncate">
-                    <span className="text-sm">📁</span>
-                    <span className="truncate">{col.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5 flex-shrink-0">
-                    <span className="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">
+            <div className="mt-3 space-y-0.5 border-t border-white/[0.06] pt-3">
+              {collections.map((col) => {
+                const Icon = COLLECTION_ICONS[col.icon] ?? Folder;
+                const active = selectedCollectionId === col.id;
+                return (
+                  <div key={col.id} className="group relative">
+                    <button onClick={() => setSelectedCollectionId(col.id)} className={`${navBtn(active)} pr-11`}>
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="min-w-0 flex-1 truncate">{col.name}</span>
+                    </button>
+
+                    {/* Count and delete share one slot so rows never shift on hover */}
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs tabular-nums text-slate-500 group-focus-within:hidden group-hover:hidden">
                       {col.itemCount || 0}
                     </span>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={() => {
                         if (confirm(`Delete collection "${col.name}"?`)) {
                           deleteCollectionMutation.mutate(col.id);
                         }
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-400 transition-opacity"
-                      title="Delete Collection"
+                      className="icon-btn absolute right-1.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 hover:text-rose-300 group-focus-within:grid group-hover:grid"
+                      aria-label={`Delete collection ${col.name}`}
+                      title="Delete collection"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
           {collections.length === 0 && (
-            <div className="px-3 py-4 text-center rounded-xl bg-slate-950/40 border border-slate-800/60">
-              <p className="text-xs text-slate-400">No collections yet.</p>
+            <div className="mt-3 rounded-xl border border-dashed border-white/10 px-3 py-5 text-center">
+              <p className="text-sm text-slate-400">No collections yet.</p>
               <button
                 onClick={() => setIsCreateColOpen(true)}
-                className="mt-2 text-xs font-semibold text-brand-400 hover:text-brand-300"
+                className="mt-2 text-sm font-semibold text-brand-300 hover:text-brand-200"
               >
-                + Create first folder
+                Create your first collection
               </button>
             </div>
           )}
-        </div>
+        </aside>
 
-        {/* Right Column: Items Grid and Filters */}
-        <div className="lg:col-span-3 space-y-4">
-          {/* Controls bar */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-            {/* Search */}
+        {/* Content */}
+        <section className="min-w-0 space-y-5">
+          {/* Search + filters */}
+          <div className="panel flex flex-col gap-3 p-3 md:flex-row md:items-center">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <input
                 type="text"
-                placeholder="Search items by title or tag..."
+                placeholder="Filter by title or tag"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-850 border border-slate-750 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-500"
+                className="field pl-10 pr-9"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="icon-btn absolute right-1.5 top-1/2 h-7 w-7 -translate-y-1/2"
+                  aria-label="Clear filter"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Kind Filters & Star */}
-            <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
-              {[
-                { label: 'All', value: '' },
-                { label: 'Files', value: 'file' },
-                { label: 'Notes', value: 'note' },
-                { label: 'Links', value: 'link' },
-                { label: 'Records', value: 'record' },
-              ].map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => setFilterKind(tab.value)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    filterKind === tab.value
-                      ? 'bg-brand-600 text-white'
-                      : 'bg-slate-850 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto rounded-xl border border-white/[0.07] bg-slate-950/50 p-1 md:flex-none">
+                {KIND_FILTERS.map((tab) => {
+                  const active = filterKind === tab.value;
+                  return (
+                    <button
+                      key={tab.value}
+                      onClick={() => setFilterKind(tab.value)}
+                      aria-pressed={active}
+                      className={`h-8 shrink-0 rounded-lg px-3.5 text-sm font-medium transition-colors ${
+                        active
+                          ? 'bg-brand-500 text-slate-950 shadow-sm'
+                          : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
 
               <button
                 onClick={() => setOnlyFavorites(!onlyFavorites)}
-                className={`p-1.5 rounded-lg border text-xs flex items-center space-x-1 transition-colors ${
+                aria-pressed={onlyFavorites}
+                className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border transition-colors ${
                   onlyFavorites
-                    ? 'bg-amber-500/15 border-amber-500/30 text-amber-400'
-                    : 'bg-slate-850 border-slate-800 text-slate-400 hover:text-slate-200'
+                    ? 'border-amber-400/30 bg-amber-400/10 text-amber-300'
+                    : 'border-white/[0.07] bg-slate-950/50 text-slate-400 hover:text-slate-100'
                 }`}
-                title="Filter favorites"
+                title="Show favourites only"
               >
-                <Star className={`w-3.5 h-3.5 ${onlyFavorites ? 'fill-amber-400' : ''}`} />
+                <Star className={`h-4 w-4 ${onlyFavorites ? 'fill-amber-300' : ''}`} />
               </button>
             </div>
           </div>
 
-          {/* Active Folder Title & Count */}
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center space-x-2">
-              <h2 className="text-base font-semibold text-white">{getCollectionTitle()}</h2>
-              <span className="text-xs text-slate-400">({items.length} items)</span>
-            </div>
+          {/* Section heading */}
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1">
+            <h2 className="text-lg font-semibold text-white">{getCollectionTitle()}</h2>
+            <span className="text-sm tabular-nums text-slate-500">{pluralize(items.length, 'item')}</span>
             {currentCollection?.description && (
-              <span className="text-xs text-slate-400 hidden sm:inline">
-                {currentCollection.description}
-              </span>
+              <span className="hidden text-sm text-slate-500 sm:inline">{currentCollection.description}</span>
             )}
           </div>
 
-          {/* Loading */}
           {itemsLoading && (
-            <div className="p-12 text-center text-slate-400 space-y-2">
-              <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs">Loading items...</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-52 animate-pulse rounded-2xl border border-white/[0.05] bg-slate-900/50" />
+              ))}
             </div>
           )}
 
-          {/* Empty State */}
           {!itemsLoading && items.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-12 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Sparkles className="w-6 h-6 text-brand-400" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-slate-900/30 px-6 py-16 text-center">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+                <Sparkles className="h-6 w-6" />
               </div>
-              <h4 className="text-base font-semibold text-white">No items found</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
-                Capture your first private note, bookmark, or structured record to organize your digital life.
+              <h4 className="mt-4 text-base font-semibold text-white">Nothing here yet</h4>
+              <p className="mt-1.5 max-w-sm text-sm text-slate-400">
+                Add a document, note, link or record. Items you add appear here.
               </p>
-              <button
-                onClick={() => setIsCreateItemOpen(true)}
-                className="mt-2 inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-md shadow-brand-600/20"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add New Item</span>
+              <button onClick={() => setIsCreateItemOpen(true)} className="btn-primary mt-5">
+                <Plus className="h-4 w-4" />
+                Add item
               </button>
             </div>
           )}
 
-          {/* Items Grid */}
           {!itemsLoading && items.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {items.map((item) => (
-                <div
+                <ItemCard
                   key={item.id}
-                  onClick={() => setViewingItem(item)}
-                  className="group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4.5 flex flex-col justify-between transition-all duration-150 hover:shadow-xl hover:shadow-black/30 cursor-pointer"
-                >
-                  <div className="space-y-3">
-                    {/* Top Row: Kind & Favorite */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1.5">
-                        {getItemKindBadge(item.kind)}
-                        {item.files && item.files.length > 0 && item.kind !== 'file' && (
-                          <span className="inline-flex items-center space-x-0.5 text-[10px] font-medium text-brand-400 bg-brand-500/10 px-1.5 py-0.5 rounded">
-                            <Paperclip className="w-2.5 h-2.5" />
-                            <span>{item.files.length}</span>
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavoriteMutation.mutate(item.id);
-                        }}
-                        className="p-1 text-slate-500 hover:text-amber-400 transition-colors"
-                      >
-                        <Star
-                          className={`w-4 h-4 ${
-                            item.favorite ? 'fill-amber-400 text-amber-400' : ''
-                          }`}
-                        />
-                      </button>
-                    </div>
-
-                    {/* Title & Preview */}
-                    <div>
-                      <h4 className="text-sm font-bold text-white group-hover:text-brand-400 transition-colors line-clamp-1">
-                        {item.title}
-                      </h4>
-                      {item.description && (
-                        <p className="text-xs text-slate-400 mt-1 line-clamp-2">
-                          {item.description}
-                        </p>
-                      )}
-                      {item.kind === 'note' && item.content && !item.description && (
-                        <p className="text-xs text-slate-400 mt-1 line-clamp-2 font-mono">
-                          {item.content}
-                        </p>
-                      )}
-                      {item.kind === 'link' && item.url && (
-                        <div className="mt-1 flex items-center space-x-1 text-xs text-brand-400/90 truncate">
-                          <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                          <span className="truncate">{item.url}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Bottom Row: Tags & Expiry */}
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-                    <div className="flex items-center space-x-1 overflow-hidden">
-                      {item.tags && item.tags.length > 0 ? (
-                        <div className="flex items-center space-x-1 truncate">
-                          <Tag className="w-3 h-3 text-slate-400 flex-shrink-0" />
-                          <span className="text-slate-400 truncate">#{item.tags[0]}</span>
-                          {item.tags.length > 1 && (
-                            <span className="text-slate-400">+{item.tags.length - 1}</span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-slate-400">{new Date(item.createdAt).toLocaleDateString()}</span>
-                      )}
-                    </div>
-
-                    {item.expiresAt ? (
-                      <span className="text-amber-400/90 font-medium flex items-center space-x-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{new Date(item.expiresAt).toLocaleDateString()}</span>
-                      </span>
-                    ) : (
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-colors" />
-                    )}
-                  </div>
-                </div>
+                  item={item}
+                  onOpen={setViewingItem}
+                  onToggleFavorite={(id) => toggleFavoriteMutation.mutate(id)}
+                />
               ))}
             </div>
           )}
-        </div>
+        </section>
       </div>
 
       {/* Modals */}

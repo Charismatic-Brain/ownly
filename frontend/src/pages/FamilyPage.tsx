@@ -286,7 +286,7 @@ export const FamilyPage: React.FC = () => {
         >
           <Users className="w-3.5 h-3.5" />
           <span>Family Groups</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
+          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
             {families.length}
           </span>
         </button>
@@ -301,7 +301,7 @@ export const FamilyPage: React.FC = () => {
         >
           <Shield className="w-3.5 h-3.5" />
           <span>Shared With Me</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
+          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
             {inboundShares.length}
           </span>
         </button>
@@ -316,7 +316,7 @@ export const FamilyPage: React.FC = () => {
         >
           <Share2 className="w-3.5 h-3.5" />
           <span>Shared By Me</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
+          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
             {outboundShares.length}
           </span>
         </button>

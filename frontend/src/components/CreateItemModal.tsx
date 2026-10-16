@@ -178,7 +178,7 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden my-8">
+      <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl shadow-black/60 overflow-hidden my-8">
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
           <h3 className="text-lg font-bold text-white">New Vault Item</h3>
           <button
@@ -255,7 +255,7 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
           {kind === 'file' && (
             <div>
               <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">
-                Choose Document or File from Computer *
+                File *
               </label>
               <input
                 type="file"
@@ -266,40 +266,38 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
               />
 
               {!selectedFile ? (
-                <div
+                <button
+                  type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-slate-750 hover:border-brand-500/60 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-850/40 hover:bg-slate-850/80 group"
+                  className="group flex w-full flex-col items-center rounded-2xl border border-dashed border-white/15 bg-slate-950/40 px-6 py-8 text-center transition-colors hover:border-brand-400/50 hover:bg-brand-500/[0.04]"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-slate-800 group-hover:bg-brand-600/20 flex items-center justify-center mx-auto text-slate-400 group-hover:text-brand-400 transition-colors">
-                    <Upload className="w-6 h-6" />
-                  </div>
-                  <p className="mt-3 text-sm font-semibold text-slate-200 group-hover:text-white">
-                    Click to browse your computer
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    PDF, PNG, JPG, WEBP, TXT, or JSON (up to 25 MB)
-                  </p>
-                </div>
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-white/[0.05] text-slate-400 ring-1 ring-inset ring-white/10 transition-colors group-hover:bg-brand-500/10 group-hover:text-brand-300 group-hover:ring-brand-400/30">
+                    <Upload className="h-6 w-6" />
+                  </span>
+                  <span className="mt-3 text-sm font-semibold text-slate-100">Choose a file to upload</span>
+                  <span className="mt-1 text-xs text-slate-500">PDF, PNG, JPG, WEBP, TXT or JSON, up to 25 MB</span>
+                </button>
               ) : (
-                <div className="p-4 rounded-xl bg-slate-850 border border-brand-500/30 flex items-center justify-between">
-                  <div className="flex items-center space-x-3 overflow-hidden">
-                    <div className="w-10 h-10 rounded-lg bg-brand-600/20 flex items-center justify-center text-brand-400 flex-shrink-0">
-                      <FileCheck className="w-5 h-5" />
-                    </div>
-                    <div className="truncate">
-                      <p className="text-sm font-medium text-white truncate">{selectedFile.name}</p>
-                      <p className="text-xs text-slate-400">{formatFileSize(selectedFile.size)}</p>
-                    </div>
+                <div className="flex items-center gap-3 rounded-xl border border-brand-400/25 bg-brand-500/[0.05] p-3">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+                    <FileCheck className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-white" title={selectedFile.name}>
+                      {selectedFile.name}
+                    </p>
+                    <p className="mt-0.5 text-xs text-slate-400">{formatFileSize(selectedFile.size)}</p>
                   </div>
                   <button
                     type="button"
+                    aria-label="Remove file"
                     onClick={() => {
                       setSelectedFile(null);
                       if (fileInputRef.current) fileInputRef.current.value = '';
                     }}
-                    className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg"
+                    className="icon-btn hover:text-rose-300"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
               )}
