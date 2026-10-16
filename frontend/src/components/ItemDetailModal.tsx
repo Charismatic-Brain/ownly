@@ -17,12 +17,12 @@ import {
   Paperclip,
   Upload,
   Loader2,
-  FileCheck,
   Share2
 } from 'lucide-react';
 import type { Item, Collection } from '../types';
 import { vaultApi } from '../lib/vaultApi';
 import { ShareItemModal } from './ShareItemModal';
+import { fileIconFor, formatFileSize } from './ItemCard';
 
 interface ItemDetailModalProps {
   item: Item | null;
@@ -95,19 +95,13 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
     }
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
   const getKindBadge = () => {
     switch (item.kind) {
       case 'file':
         return (
           <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-500/15 text-brand-400 border border-brand-500/30">
             <Paperclip className="w-3 h-3" />
-            <span>Document / File</span>
+            <span>File</span>
           </span>
         );
       case 'note':
@@ -121,14 +115,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
         return (
           <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/30">
             <LinkIcon className="w-3 h-3" />
-            <span>Web Link</span>
+            <span>Link</span>
           </span>
         );
       case 'record':
         return (
           <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
             <Layers className="w-3 h-3" />
-            <span>Structured Record</span>
+            <span>Record</span>
           </span>
         );
       default:
@@ -142,7 +136,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden my-8">
+      <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-xl shadow-2xl shadow-black/60 overflow-hidden my-8">
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-800 bg-slate-850/50">
           <div className="space-y-1.5 pr-4">
@@ -150,7 +144,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               {getKindBadge()}
               {collection && (
                 <span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full">
-                  📁 {collection.name}
+                  {collection.name}
                 </span>
               )}
             </div>
@@ -179,19 +173,24 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Description */}
           {item.description && (
             <div>
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
+              <h4 className="text-sm font-semibold text-slate-200 mb-1">
                 Description
               </h4>
               <p className="text-sm text-slate-200">{item.description}</p>
             </div>
           )}
 
-          {/* Attached Files & Documents */}
+          {/* Attached files */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-                <Paperclip className="w-3.5 h-3.5 text-brand-400" />
-                <span>Attached Files & Storage (GridFS)</span>
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+                <Paperclip className="h-4 w-4 text-brand-300" />
+                Attached files
+                {item.files && item.files.length > 0 && (
+                  <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-xs font-medium tabular-nums text-slate-400">
+                    {item.files.length}
+                  </span>
+                )}
               </h4>
 
               <div>
@@ -206,65 +205,74 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingAttachment}
-                  className="inline-flex items-center space-x-1 text-xs text-brand-400 hover:text-brand-300 font-medium"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs font-semibold text-brand-300 transition-colors hover:bg-white/[0.06] hover:text-brand-200 disabled:opacity-50"
                 >
                   {uploadingAttachment ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <Upload className="w-3.5 h-3.5" />
+                    <Upload className="h-3.5 w-3.5" />
                   )}
-                  <span>Attach File</span>
+                  Attach file
                 </button>
               </div>
             </div>
 
             {item.files && item.files.length > 0 ? (
-              <div className="space-y-2">
-                {item.files.map((file) => (
-                  <div
-                    key={file.id}
-                    className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between"
-                  >
-                    <div className="flex items-center space-x-3 overflow-hidden">
-                      <div className="w-9 h-9 rounded-lg bg-slate-850 flex items-center justify-center text-brand-400 flex-shrink-0">
-                        <FileCheck className="w-4 h-4" />
+              <ul className="space-y-2">
+                {item.files.map((file) => {
+                  const FileTypeIcon = fileIconFor(file.mimeType);
+                  return (
+                    <li
+                      key={file.id}
+                      className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-slate-950/60 p-3"
+                    >
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+                        <FileTypeIcon className="h-[18px] w-[18px]" />
                       </div>
-                      <div className="truncate">
-                        <p className="text-xs font-medium text-white truncate">{file.originalName}</p>
-                        <p className="text-[11px] text-slate-400">
-                          {formatFileSize(file.sizeBytes)} • {file.mimeType}
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-white" title={file.originalName}>
+                          {file.originalName}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-slate-500">
+                          {formatFileSize(file.sizeBytes)} · {file.mimeType}
                         </p>
                       </div>
-                    </div>
 
-                    <div className="flex items-center space-x-1.5 flex-shrink-0">
-                      <button
-                        onClick={() => vaultApi.downloadFile(file.id, file.originalName, true)}
-                        className="p-2 text-slate-400 hover:text-brand-400 hover:bg-slate-800 rounded-lg transition-colors"
-                        title="Preview File"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => vaultApi.downloadFile(file.id, file.originalName, false)}
-                        className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                        title="Download File"
-                      >
-                        <Download className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteAttachment(file.id)}
-                        className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
-                        title="Delete File"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex shrink-0 items-center gap-0.5">
+                        <button
+                          onClick={() => vaultApi.downloadFile(file.id, file.originalName, true)}
+                          className="icon-btn hover:text-brand-300"
+                          title="Preview"
+                          aria-label={`Preview ${file.originalName}`}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => vaultApi.downloadFile(file.id, file.originalName, false)}
+                          className="icon-btn"
+                          title="Download"
+                          aria-label={`Download ${file.originalName}`}
+                        >
+                          <Download className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAttachment(file.id)}
+                          className="icon-btn hover:text-rose-300"
+                          title="Delete"
+                          aria-label={`Delete ${file.originalName}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             ) : (
-              <p className="text-xs text-slate-400 italic">No files attached to this item yet.</p>
+              <p className="rounded-xl border border-dashed border-white/10 px-4 py-5 text-center text-sm text-slate-500">
+                No files attached yet.
+              </p>
             )}
           </div>
 
@@ -272,7 +280,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {item.kind === 'note' && item.content && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-slate-200">
                   Content
                 </h4>
                 <button
@@ -292,7 +300,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Link URL */}
           {item.kind === 'link' && item.url && (
             <div>
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              <h4 className="text-sm font-semibold text-slate-200 mb-1.5">
                 Target Link
               </h4>
               <a
@@ -310,7 +318,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Record custom fields */}
           {item.kind === 'record' && Object.keys(item.customFields || {}).length > 0 && (
             <div>
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <h4 className="text-sm font-semibold text-slate-200 mb-2">
                 Custom Fields
               </h4>
               <div className="rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
@@ -327,7 +335,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Tags */}
           {item.tags && item.tags.length > 0 && (
             <div>
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center space-x-1">
+              <h4 className="text-sm font-semibold text-slate-200 mb-2 flex items-center space-x-1">
                 <Tag className="w-3.5 h-3.5" />
                 <span>Tags</span>
               </h4>
@@ -350,7 +358,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4 text-slate-500" />
                 <div>
-                  <span className="block text-[10px] text-slate-500">EVENT DATE</span>
+                  <span className="block text-[11px] text-slate-500">Event date</span>
                   <span className="text-slate-300">{new Date(item.eventDate).toLocaleDateString()}</span>
                 </div>
               </div>
@@ -359,7 +367,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-slate-500" />
                 <div>
-                  <span className="block text-[10px] text-slate-500">EXPIRES AT</span>
+                  <span className="block text-[11px] text-slate-500">Expires</span>
                   <span className="text-amber-400 font-semibold">{new Date(item.expiresAt).toLocaleDateString()}</span>
                 </div>
               </div>

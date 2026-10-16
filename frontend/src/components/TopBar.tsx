@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Search, LogOut, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +11,21 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenSidebar }) => {
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Press "/" anywhere (outside a text field) to jump to search.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,53 +36,42 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenSidebar }) => {
   };
 
   return (
-    <header className="h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
-      <div className="flex items-center space-x-3">
-        <button
-          onClick={onOpenSidebar}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden"
-          aria-label="Open sidebar"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/[0.06] bg-slate-950/70 px-4 backdrop-blur-xl sm:px-6 lg:px-10">
+      <button onClick={onOpenSidebar} className="icon-btn h-10 w-10 lg:hidden" aria-label="Open navigation">
+        <Menu className="h-5 w-5" />
+      </button>
 
-        {/* Global Search */}
-        <form onSubmit={handleSearchSubmit} className="relative w-48 sm:w-80 md:w-96">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search documents, tags, notes... (Press Enter)"
-            className="w-full bg-slate-850 border border-slate-750 rounded-lg pl-9 pr-4 py-1.5 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
-          />
-        </form>
-      </div>
+      {/* Global search */}
+      <form onSubmit={handleSearchSubmit} role="search" className="relative min-w-0 max-w-xl flex-1">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search your vault"
+          aria-label="Search your vault"
+          className="field h-10 rounded-full bg-white/[0.04] pl-10 pr-12"
+        />
+        <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-white/10 px-1.5 text-[11px] font-medium leading-5 text-slate-500 sm:block">
+          /
+        </kbd>
+      </form>
 
-      {/* User profile & actions */}
-      <div className="flex items-center space-x-3">
-        <div className="hidden sm:flex flex-col text-right">
-          <span className="text-sm font-medium text-slate-200 leading-tight">
-            {user?.displayName || 'User'}
-          </span>
-          <span className="text-xs text-slate-400 leading-tight">
-            {user?.email}
-          </span>
+      <div className="ml-auto flex items-center gap-3">
+        <div className="hidden min-w-0 text-right sm:block">
+          <p className="truncate text-sm font-semibold leading-tight text-slate-100">{user?.displayName || 'User'}</p>
+          <p className="truncate text-xs leading-tight text-slate-500">{user?.email}</p>
         </div>
 
-        <div className="w-8 h-8 rounded-full bg-brand-600/20 border border-brand-500/30 flex items-center justify-center text-brand-400 font-semibold text-xs">
-          {user?.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon className="w-4 h-4" />}
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand-500/30 to-brand-700/30 text-sm font-semibold text-brand-200 ring-1 ring-inset ring-brand-400/30">
+          {user?.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon className="h-4 w-4" />}
         </div>
 
-        <button
-          onClick={logout}
-          title="Sign out"
-          className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
+        <button onClick={logout} title="Sign out" aria-label="Sign out" className="icon-btn h-9 w-9 hover:text-rose-300">
+          <LogOut className="h-4 w-4" />
         </button>
       </div>
     </header>
   );
 };
-

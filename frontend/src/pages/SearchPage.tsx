@@ -5,19 +5,14 @@ import {
   Search,
   X,
   Star,
-  FileText,
-  Link as LinkIcon,
-  Layers,
-  Paperclip,
   Clock,
-  Tag,
-  ChevronRight,
   Sparkles,
   ArrowUpDown
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import { ItemDetailModal } from '../components/ItemDetailModal';
-import type { Item, Collection, ItemKind } from '../types';
+import { ItemCard } from '../components/ItemCard';
+import type { Item, Collection } from '../types';
 
 export const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -103,41 +98,6 @@ export const SearchPage: React.FC = () => {
       setViewingItem(null);
     },
   });
-
-  const getItemKindBadge = (itemKind: ItemKind) => {
-    switch (itemKind) {
-      case 'file':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20">
-            <Paperclip className="w-3 h-3" />
-            <span>File</span>
-          </span>
-        );
-      case 'note':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <FileText className="w-3 h-3" />
-            <span>Note</span>
-          </span>
-        );
-      case 'link':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
-            <LinkIcon className="w-3 h-3" />
-            <span>Link</span>
-          </span>
-        );
-      case 'record':
-        return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Layers className="w-3 h-3" />
-            <span>Record</span>
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -306,78 +266,14 @@ export const SearchPage: React.FC = () => {
 
       {/* Results Grid */}
       {!isLoading && items.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => (
-            <div
+            <ItemCard
               key={item.id}
-              onClick={() => setViewingItem(item)}
-              className="group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4.5 flex flex-col justify-between transition-all duration-150 hover:shadow-xl hover:shadow-black/30 cursor-pointer"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-1.5">
-                    {getItemKindBadge(item.kind)}
-                    {item.files && item.files.length > 0 && item.kind !== 'file' && (
-                      <span className="inline-flex items-center space-x-0.5 text-[10px] font-medium text-brand-400 bg-brand-500/10 px-1.5 py-0.5 rounded">
-                        <Paperclip className="w-2.5 h-2.5" />
-                        <span>{item.files.length}</span>
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavoriteMutation.mutate(item.id);
-                    }}
-                    className="p-1 text-slate-500 hover:text-amber-400 transition-colors"
-                  >
-                    <Star
-                      className={`w-4 h-4 ${
-                        item.favorite ? 'fill-amber-400 text-amber-400' : ''
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-brand-400 transition-colors line-clamp-1">
-                    {item.title}
-                  </h4>
-                  {item.description && (
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
-                      {item.description}
-                    </p>
-                  )}
-                  {item.kind === 'note' && item.content && !item.description && (
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 font-mono">
-                      {item.content}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-                <div className="flex items-center space-x-1 overflow-hidden">
-                  {item.tags && item.tags.length > 0 ? (
-                    <div className="flex items-center space-x-1 truncate">
-                      <Tag className="w-3 h-3 text-slate-400 flex-shrink-0" />
-                      <span className="text-slate-400 truncate">#{item.tags[0]}</span>
-                    </div>
-                  ) : (
-                    <span className="text-slate-400">{new Date(item.createdAt).toLocaleDateString()}</span>
-                  )}
-                </div>
-
-                {item.expiresAt ? (
-                  <span className="text-amber-400/90 font-medium flex items-center space-x-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{new Date(item.expiresAt).toLocaleDateString()}</span>
-                  </span>
-                ) : (
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-colors" />
-                )}
-              </div>
-            </div>
+              item={item}
+              onOpen={setViewingItem}
+              onToggleFavorite={(id) => toggleFavoriteMutation.mutate(id)}
+            />
           ))}
         </div>
       )}
