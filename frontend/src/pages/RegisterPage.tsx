@@ -50,7 +50,7 @@ export const RegisterPage: React.FC = () => {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-slate-900 py-8 px-6 shadow-2xl rounded-2xl border border-slate-800 sm:px-10">
+        <div className="panel rounded-2xl py-8 px-6 shadow-modal border-white/10 sm:px-10">
           {error && (
             <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-3 text-rose-400 text-sm">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -60,7 +60,7 @@ export const RegisterPage: React.FC = () => {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="field-label">
                 Full Name
               </label>
               <input
@@ -69,12 +69,12 @@ export const RegisterPage: React.FC = () => {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Jane Doe"
-                className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="field"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="field-label">
                 Email Address
               </label>
               <input
@@ -83,12 +83,12 @@ export const RegisterPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="jane@example.com"
-                className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="field"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="field-label">
                 Password (min 8 characters)
               </label>
               <input
@@ -98,14 +98,14 @@ export const RegisterPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="field"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-3 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm transition-colors shadow-lg shadow-brand-600/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full !py-3 mt-3"
             >
               {isSubmitting ? (
                 <>
@@ -121,10 +121,10 @@ export const RegisterPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-800 text-center">
+          <div className="mt-6 pt-6 border-t border-white/[0.08] text-center">
             <p className="text-sm text-slate-400">
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-brand-400 hover:text-brand-300 transition-colors">
+              <Link to="/login" className="font-semibold text-brand-300 hover:text-brand-200 transition-colors">
                 Sign in instead
               </Link>
             </p>

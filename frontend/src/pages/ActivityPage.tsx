@@ -111,7 +111,7 @@ export const ActivityPage: React.FC = () => {
         <button
           onClick={() => fetchLogs(true)}
           disabled={refreshing}
-          className="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-xl transition-all self-start sm:self-auto border border-slate-700"
+          className="btn-secondary self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           <span>Refresh Feed</span>
@@ -119,7 +119,7 @@ export const ActivityPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-900 border border-slate-800 rounded-2xl">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 panel rounded-2xl">
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
           {[
@@ -135,10 +135,10 @@ export const ActivityPage: React.FC = () => {
                 setSelectedCategory(cat.id);
                 setPage(1);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all active:scale-[0.98] ${
                 selectedCategory === cat.id
-                  ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
             >
               {cat.label}
@@ -148,14 +148,14 @@ export const ActivityPage: React.FC = () => {
 
         {/* Outcome Filter */}
         <div className="flex items-center space-x-2 text-xs">
-          <span className="text-slate-500">Outcome:</span>
+          <span className="text-slate-400">Outcome:</span>
           <select
             value={selectedOutcome}
             onChange={(e) => {
               setSelectedOutcome(e.target.value);
               setPage(1);
             }}
-            className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-slate-300 text-xs focus:outline-none focus:border-brand-500"
+            className="field !w-auto !py-1 !text-xs"
           >
             <option value="all">All Outcomes</option>
             <option value="success">Successful</option>
@@ -171,7 +171,7 @@ export const ActivityPage: React.FC = () => {
           <span>Loading security audit records...</span>
         </div>
       ) : logs.length === 0 ? (
-        <div className="p-16 bg-slate-900 border border-slate-800 rounded-2xl text-center space-y-2">
+        <div className="p-16 panel rounded-2xl text-center space-y-2">
           <ShieldCheck className="w-10 h-10 text-slate-600 mx-auto" />
           <p className="text-sm font-medium text-slate-300">No audit events match your filter</p>
           <p className="text-xs text-slate-500">
@@ -183,7 +183,7 @@ export const ActivityPage: React.FC = () => {
           {logs.map((log) => (
             <div
               key={log.id}
-              className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700/80 transition-colors"
+              className="p-4 panel rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-white/15 transition-all"
             >
               <div className="flex items-start space-x-3.5">
                 <div className="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5">

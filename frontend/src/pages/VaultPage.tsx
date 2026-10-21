@@ -16,7 +16,6 @@ import {
   Plane,
   Key,
   Trash2,
-  Sparkles,
   X,
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
@@ -133,10 +132,10 @@ export const VaultPage: React.FC = () => {
   };
 
   const navBtn = (active: boolean) =>
-    `relative flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors ${
+    `relative flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-all active:scale-[0.98] ${
       active
-        ? 'bg-brand-500/10 text-brand-200'
-        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'
+        ? 'bg-brand-500/10 text-brand-200 border border-brand-500/20'
+        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100 border border-transparent'
     }`;
 
   return (
@@ -261,9 +260,9 @@ export const VaultPage: React.FC = () => {
                       key={tab.value}
                       onClick={() => setFilterKind(tab.value)}
                       aria-pressed={active}
-                      className={`h-8 shrink-0 rounded-lg px-3.5 text-sm font-medium transition-colors ${
+                      className={`h-8 shrink-0 rounded-lg px-3.5 text-sm font-medium transition-all active:scale-[0.97] ${
                         active
-                          ? 'bg-brand-500 text-slate-950 shadow-sm'
+                          ? 'bg-brand-500 text-slate-950 font-semibold shadow-sm'
                           : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
                       }`}
                     >
@@ -308,7 +307,7 @@ export const VaultPage: React.FC = () => {
           {!itemsLoading && items.length === 0 && (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-slate-900/30 px-6 py-16 text-center">
               <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
-                <Sparkles className="h-6 w-6" />
+                <FolderLock className="h-6 w-6" />
               </div>
               <h4 className="mt-4 text-base font-semibold text-white">Nothing here yet</h4>
               <p className="mt-1.5 max-w-sm text-sm text-slate-400">

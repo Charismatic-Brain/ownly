@@ -100,10 +100,10 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl shadow-black/50">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-lg">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
               <Bell className="w-4 h-4" />
@@ -115,7 +115,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           </div>
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="icon-btn"
+            aria-label="Close"
           >
             <X className="w-4 h-4" />
           </button>
@@ -124,7 +125,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -132,7 +133,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
           {/* Title */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Reminder Title <span className="text-rose-400">*</span>
             </label>
             <input
@@ -141,13 +142,13 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Renew Health Insurance, Passport Expiry, Bill payment"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+              className="field"
             />
           </div>
 
           {/* Due Date & Time */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Due Date & Time <span className="text-rose-400">*</span>
             </label>
             <div className="relative">
@@ -156,7 +157,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
                 required
                 value={remindAt}
                 onChange={(e) => setRemindAt(e.target.value)}
-                className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="field"
               />
             </div>
 
@@ -173,7 +174,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
                   type="button"
                   key={q.label}
                   onClick={() => handleQuickDate(q.days)}
-                  className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 hover:bg-slate-750 hover:text-white border border-slate-700 transition-colors"
+                  className="px-2 py-0.5 rounded-lg text-[10px] font-medium bg-white/[0.04] text-slate-300 hover:bg-white/[0.08] hover:text-white border border-white/[0.08] transition-all active:scale-[0.97]"
                 >
                   {q.label}
                 </button>
@@ -183,22 +184,22 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
           {/* Priority */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Priority</label>
+            <label className="field-label">Priority</label>
             <div className="grid grid-cols-4 gap-2">
               {(['low', 'medium', 'high', 'urgent'] as ReminderPriority[]).map((p) => {
                 const isSelected = priority === p;
                 const colors = {
-                  low: isSelected ? 'bg-slate-700 text-white border-slate-600' : 'bg-slate-850 text-slate-400 border-slate-750',
-                  medium: isSelected ? 'bg-brand-600/30 text-brand-300 border-brand-500/40' : 'bg-slate-850 text-slate-400 border-slate-750',
-                  high: isSelected ? 'bg-amber-600/30 text-amber-300 border-amber-500/40' : 'bg-slate-850 text-slate-400 border-slate-750',
-                  urgent: isSelected ? 'bg-rose-600/30 text-rose-300 border-rose-500/40' : 'bg-slate-850 text-slate-400 border-slate-750',
+                  low: isSelected ? 'bg-white/10 text-white border-white/20' : 'bg-white/[0.03] text-slate-400 border-white/[0.06]',
+                  medium: isSelected ? 'bg-brand-500/20 text-brand-300 border-brand-500/40' : 'bg-white/[0.03] text-slate-400 border-white/[0.06]',
+                  high: isSelected ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-white/[0.03] text-slate-400 border-white/[0.06]',
+                  urgent: isSelected ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/[0.03] text-slate-400 border-white/[0.06]',
                 };
                 return (
                   <button
                     type="button"
                     key={p}
                     onClick={() => setPriority(p)}
-                    className={`py-1.5 px-2 rounded-lg text-xs font-semibold capitalize border transition-colors ${colors[p]}`}
+                    className={`py-1.5 px-2 rounded-xl text-xs font-semibold capitalize border transition-all active:scale-[0.98] ${colors[p]}`}
                   >
                     {p}
                   </button>
@@ -209,13 +210,13 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
           {/* Linked Vault Item (Optional) */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Link to Vault Item <span className="text-slate-500 font-normal">(Optional)</span>
             </label>
             <select
               value={itemId}
               onChange={(e) => setItemId(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+              className="field"
             >
               <option value="">-- No item linked --</option>
               {items.map((it) => (
@@ -228,7 +229,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Notes & Context <span className="text-slate-500 font-normal">(Optional)</span>
             </label>
             <textarea
@@ -236,23 +237,23 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
               placeholder="Add policy number, renewal link, or instruction notes..."
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+              className="field"
             />
           </div>
 
           {/* Actions */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-2.5">
+          <div className="pt-4 border-t border-white/[0.08] flex items-center justify-end space-x-3">
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-brand-600/20 disabled:opacity-50"
+              className="btn-primary"
             >
               {createMutation.isPending ? 'Saving...' : 'Set Reminder'}
             </button>

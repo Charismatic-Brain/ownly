@@ -92,14 +92,14 @@ export const DashboardPage: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Link
             to="/search"
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-200 text-sm font-medium border border-slate-750 transition-colors"
+            className="btn-secondary"
           >
             <Search className="w-4 h-4 text-slate-400" />
             <span>Search Vault</span>
           </Link>
           <Link
             to="/vault"
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium transition-colors shadow-lg shadow-brand-600/20"
+            className="btn-primary"
           >
             <Plus className="w-4 h-4" />
             <span>Open Vault</span>
@@ -108,7 +108,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Database connection banner */}
-      <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+      <div className="p-4 rounded-2xl panel-subtle flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
@@ -116,7 +116,7 @@ export const DashboardPage: React.FC = () => {
           <div>
             <span className="text-sm font-medium text-slate-200">MongoDB Aggregations Active</span>
             <p className="text-xs text-slate-400">
-              Aggregated real-time metrics across database <code className="text-slate-300">ownly_dev</code> • GridFS bucket operational
+              Aggregated real-time metrics across database <code className="text-slate-300 font-mono">ownly_dev</code> • GridFS bucket operational
             </p>
           </div>
         </div>
@@ -130,18 +130,18 @@ export const DashboardPage: React.FC = () => {
         {metrics.map((metric) => (
           <div
             key={metric.title}
-            className="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-750 transition-colors shadow-sm"
+            className="p-5 rounded-2xl panel hover:border-white/15 transition-all duration-200 shadow-sm"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                 {metric.title}
               </span>
-              <div className="p-2 rounded-lg bg-slate-850 text-brand-400">
+              <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-brand-400">
                 <metric.icon className="w-4 h-4" />
               </div>
             </div>
             <div className="mt-4 flex items-baseline justify-between">
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-white tracking-tight">
                 {isLoading ? '...' : metric.value}
               </span>
               <span className="text-xs font-medium text-slate-400">{metric.change}</span>
@@ -152,7 +152,7 @@ export const DashboardPage: React.FC = () => {
 
       {/* Breakdown by Kind & Quick Stats */}
       {kindBreakdown.length > 0 && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+        <div className="panel rounded-2xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Vault Items by Kind
@@ -164,7 +164,7 @@ export const DashboardPage: React.FC = () => {
               <Link
                 key={kb.kind}
                 to={`/search?kind=${kb.kind}`}
-                className="flex items-center justify-between p-3 rounded-lg bg-slate-850/70 border border-slate-800 hover:border-brand-500/40 transition-colors"
+                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:border-brand-500/40 hover:bg-white/[0.06] transition-all active:scale-[0.98]"
               >
                 <div className="flex items-center space-x-2">
                   {getKindIcon(kb.kind)}
@@ -180,14 +180,14 @@ export const DashboardPage: React.FC = () => {
       {/* Detailed Sections: Upcoming Expiries & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Expiries / Deadlines */}
-        <div className="p-6 rounded-xl bg-slate-900 border border-slate-800 space-y-4">
+        <div className="p-6 rounded-2xl panel space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Clock className="w-5 h-5 text-amber-400" />
               <h2 className="text-base font-semibold text-white">Upcoming Expirations</h2>
             </div>
             {expiringSoonCount > 0 && (
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 {expiringSoonCount} within 30 days
               </span>
             )}
@@ -195,7 +195,7 @@ export const DashboardPage: React.FC = () => {
 
           {upcomingExpiries.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-center text-slate-400 space-y-2">
-              <div className="w-10 h-10 rounded-full bg-slate-850 flex items-center justify-center text-slate-500">
+              <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-slate-500">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400" />
               </div>
               <p className="text-sm font-medium text-slate-300">All documents are up-to-date</p>
@@ -206,7 +206,7 @@ export const DashboardPage: React.FC = () => {
               {upcomingExpiries.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-850/60 border border-slate-800/80 text-xs"
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs hover:border-white/10 transition-colors"
                 >
                   <div className="flex items-center space-x-2.5 truncate">
                     {getKindIcon(item.kind)}
@@ -224,7 +224,7 @@ export const DashboardPage: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <div className="pt-2 flex items-center justify-between border-t border-slate-800/80">
+              <div className="pt-2 flex items-center justify-between border-t border-white/[0.06]">
                 <Link
                   to="/reminders"
                   className="text-xs font-semibold text-brand-400 hover:text-brand-300 flex items-center space-x-1"
@@ -244,7 +244,7 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Recent Vault Activity */}
-        <div className="p-6 rounded-xl bg-slate-900 border border-slate-800 space-y-4">
+        <div className="p-6 rounded-2xl panel space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Calendar className="w-5 h-5 text-slate-400" />
@@ -273,7 +273,7 @@ export const DashboardPage: React.FC = () => {
               {recentItems.slice(0, 5).map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-850/60 border border-slate-800/80 text-xs"
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs hover:border-white/10 transition-colors"
                 >
                   <div className="flex items-center space-x-2.5 truncate">
                     {getKindIcon(item.kind)}

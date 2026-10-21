@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Trash2,
   RotateCcw,
-  Sparkles,
   ExternalLink
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
@@ -250,7 +249,7 @@ export const RemindersPage: React.FC = () => {
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-colors shadow-lg shadow-brand-600/20"
+          className="btn-primary"
         >
           <Plus className="w-4 h-4" />
           <span>New Reminder</span>
@@ -259,71 +258,71 @@ export const RemindersPage: React.FC = () => {
 
       {/* Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase tracking-wider">
             <span>Overdue</span>
             <AlertTriangle className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{overdueCount}</p>
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{overdueCount}</p>
           <p className="text-[11px] text-slate-500 mt-0.5">Requires immediate attention</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider">
             <span>Due Today</span>
             <Clock className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{todayCount}</p>
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{todayCount}</p>
           <p className="text-[11px] text-slate-500 mt-0.5">Due before end of day</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase tracking-wider">
             <span>This Week</span>
             <Calendar className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{thisWeekCount}</p>
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{thisWeekCount}</p>
           <p className="text-[11px] text-slate-500 mt-0.5">Next 7 calendar days</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase tracking-wider">
             <span>Completed</span>
             <CheckCircle2 className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{totalCompleted}</p>
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{totalCompleted}</p>
           <p className="text-[11px] text-slate-500 mt-0.5">Resolved in-app alerts</p>
         </div>
       </div>
 
       {/* View Tabs */}
-      <div className="flex items-center space-x-1 border-b border-slate-800 pb-2">
+      <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
         <button
           onClick={() => setActiveTab('timeline')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'timeline'
-              ? 'bg-brand-600 text-white'
-              : 'text-slate-400 hover:text-white hover:bg-slate-850'
+              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
           }`}
         >
           Upcoming Deadlines
         </button>
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'all'
-              ? 'bg-brand-600 text-white'
-              : 'text-slate-400 hover:text-white hover:bg-slate-850'
+              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
           }`}
         >
           All Reminders ({reminders.length})
         </button>
         <button
           onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
             activeTab === 'completed'
-              ? 'bg-brand-600 text-white'
-              : 'text-slate-400 hover:text-white hover:bg-slate-850'
+              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
           }`}
         >
           Completed Archive ({totalCompleted})
@@ -395,7 +394,7 @@ export const RemindersPage: React.FC = () => {
           {!deadlinesLoading && deadlines?.upcoming && deadlines.upcoming.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                <Sparkles className="w-4 h-4 text-brand-400" />
+                <Clock className="w-4 h-4 text-brand-400" />
                 <span>Upcoming (Next 30 Days) ({deadlines.upcoming.length})</span>
               </div>
               <div className="space-y-2.5">{deadlines.upcoming.map(renderDeadlineCard)}</div>

@@ -5,7 +5,6 @@ import {
   Plus,
   Upload,
   Calendar,
-  Sparkles,
   Trash2,
   Download,
   ArrowLeft,
@@ -114,25 +113,26 @@ export const MemoriesPage: React.FC = () => {
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="btn-secondary"
           >
-            <Upload className="w-3.5 h-3.5" />
+            <Upload className="w-4 h-4" />
             <span>Upload Media</span>
           </button>
           {!selectedAlbumId && (
             <button
               onClick={() => setIsAlbumModalOpen(true)}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-brand-600/20"
+              className="btn-primary"
             >
               <Plus className="w-4 h-4" />
-              <span>+ New Album</span>
+              <span>New Album</span>
             </button>
           )}
           {selectedAlbumId && selectedAlbum && (
             <button
               onClick={() => handleDeleteAlbum(selectedAlbum.id, selectedAlbum.title)}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors border border-slate-800"
+              className="icon-btn hover:text-rose-400"
               title="Delete album"
+              aria-label="Delete album"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -142,23 +142,23 @@ export const MemoriesPage: React.FC = () => {
 
       {/* Main Tabs (only when not drilling into an album) */}
       {!selectedAlbumId && (
-        <div className="flex items-center space-x-1 border-b border-slate-800 pb-2">
+        <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
           <button
             onClick={() => setActiveTab('albums')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
               activeTab === 'albums'
-                ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
             Albums ({albums.length})
           </button>
           <button
             onClick={() => setActiveTab('timeline')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
               activeTab === 'timeline'
-                ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
             All Media Timeline
@@ -241,9 +241,9 @@ export const MemoriesPage: React.FC = () => {
           )}
 
           {!albumsLoading && albums.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Sparkles className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-brand-400">
+                <Image className="w-6 h-6" />
               </div>
               <h4 className="text-base font-semibold text-white">No albums created yet</h4>
               <p className="text-xs text-slate-400 max-w-sm">
@@ -251,9 +251,10 @@ export const MemoriesPage: React.FC = () => {
               </p>
               <button
                 onClick={() => setIsAlbumModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="btn-primary mt-2"
               >
-                + Create First Album
+                <Plus className="w-4 h-4" />
+                <span>Create First Album</span>
               </button>
             </div>
           )}
@@ -526,69 +527,69 @@ const CreateAlbumModal: React.FC<AlbumModalProps> = ({ onClose, onSuccess }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <h2 className="text-base font-semibold text-white">Create New Album</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="icon-btn" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Album Title</label>
+            <label className="field-label">Album Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Summer Vacation, Birthday 2026, Family Gathering"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+            <label className="field-label">Description</label>
             <textarea
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes or details about this album..."
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <label className="field-label">Tags (comma separated)</label>
             <input
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="vacation, family, beach"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-50"
+              className="btn-primary"
             >
               {mutation.isPending ? 'Creating...' : 'Create Album'}
             </button>
@@ -649,29 +650,29 @@ const UploadMediaModal: React.FC<UploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <h2 className="text-base font-semibold text-white">Upload Photo or Video</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="icon-btn" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Select Album (Optional)</label>
+            <label className="field-label">Select Album (Optional)</label>
             <select
               value={selectedAlbumId}
               onChange={(e) => setSelectedAlbumId(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+              className="field"
             >
               <option value="">-- No album (General Timeline) --</option>
               {albums.map((a) => (
@@ -683,50 +684,50 @@ const UploadMediaModal: React.FC<UploadModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">File (Image or Video, max 50 MB)</label>
+            <label className="field-label">File (Image or Video, max 50 MB)</label>
             <input
               type="file"
               required
               accept="image/*,video/mp4,video/webm"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-brand-400 hover:file:bg-slate-750 cursor-pointer"
+              className="field !py-1.5 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/[0.08] file:text-brand-300 hover:file:bg-white/[0.12] cursor-pointer"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Caption</label>
+            <label className="field-label">Caption</label>
             <input
               type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="e.g. Sunset at the resort"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <label className="field-label">Tags (comma separated)</label>
             <input
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="beach, sunset, holiday"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isUploading}
-              className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-50"
+              className="btn-primary"
             >
               {isUploading ? 'Uploading to GridFS...' : 'Upload'}
             </button>

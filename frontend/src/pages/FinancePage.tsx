@@ -93,17 +93,17 @@ export const FinancePage: React.FC = () => {
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setIsBillModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="btn-secondary"
           >
-            <Calendar className="w-3.5 h-3.5" />
-            <span>+ Add Bill</span>
+            <Calendar className="w-4 h-4" />
+            <span>Add Bill</span>
           </button>
           <button
             onClick={() => setIsTxnModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-brand-600/20"
+            className="btn-primary"
           >
             <Plus className="w-4 h-4" />
-            <span>+ Add Transaction</span>
+            <span>Add Transaction</span>
           </button>
         </div>
       </div>
@@ -111,37 +111,37 @@ export const FinancePage: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Total Income */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase tracking-wider">
             <span>Total Income</span>
             <ArrowDownLeft className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
             {summaryLoading ? '...' : formatCurrency(summary?.totalIncome || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">Recorded cash inflows</p>
         </div>
 
         {/* Total Expenses */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase tracking-wider">
             <span>Total Expenses</span>
             <ArrowUpRight className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
             {summaryLoading ? '...' : formatCurrency(summary?.totalExpense || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">Recorded outflows</p>
         </div>
 
         {/* Net Savings */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase tracking-wider">
             <span>Net Savings</span>
             <PiggyBank className="w-4 h-4" />
           </div>
           <p
-            className={`text-2xl font-bold mt-2 ${
+            className={`text-2xl font-bold mt-2 tracking-tight ${
               (summary?.netSavings || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'
             }`}
           >
@@ -151,12 +151,12 @@ export const FinancePage: React.FC = () => {
         </div>
 
         {/* Upcoming Active Bills */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase">
+        <div className="p-4 rounded-2xl panel">
+          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider">
             <span>Upcoming Bills</span>
             <CreditCard className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
             {summaryLoading ? '...' : formatCurrency(summary?.upcomingBillsTotal || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">
@@ -167,7 +167,7 @@ export const FinancePage: React.FC = () => {
 
       {/* Category Breakdown Progress Bars */}
       {summary && summary.categoryBreakdown.length > 0 && (
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+        <div className="p-5 rounded-2xl panel space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Spending Breakdown by Category
@@ -179,7 +179,7 @@ export const FinancePage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {summary.categoryBreakdown.map((cat) => (
-              <div key={cat.category} className="p-3 rounded-lg bg-slate-850/60 border border-slate-800 space-y-1.5">
+              <div key={cat.category} className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.07] space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-200">{cat.category}</span>
                   <span className="font-bold text-white">{formatCurrency(cat.totalAmount)}</span>
@@ -202,24 +202,24 @@ export const FinancePage: React.FC = () => {
       )}
 
       {/* View Tabs */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div className="flex items-center space-x-1">
+      <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => setActiveTab('transactions')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
               activeTab === 'transactions'
-                ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
             Transactions ({transactions.length})
           </button>
           <button
             onClick={() => setActiveTab('bills')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
               activeTab === 'bills'
-                ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
             Bills & Subscriptions ({bills.length})
@@ -227,7 +227,7 @@ export const FinancePage: React.FC = () => {
         </div>
 
         {activeTab === 'transactions' && (
-          <div className="flex items-center space-x-1 bg-slate-850 p-1 rounded-xl border border-slate-750">
+          <div className="flex items-center space-x-1 bg-slate-950/60 p-1 rounded-xl border border-white/[0.08]">
             {[
               { label: 'All', val: '' },
               { label: 'Expenses', val: 'expense' },
@@ -236,9 +236,9 @@ export const FinancePage: React.FC = () => {
               <button
                 key={t.label}
                 onClick={() => setTypeFilter(t.val)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all active:scale-[0.97] ${
                   typeFilter === t.val
-                    ? 'bg-brand-600 text-white'
+                    ? 'bg-brand-500 text-slate-950 font-semibold'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -475,18 +475,18 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <h2 className="text-base font-semibold text-white">Add Transaction</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="icon-btn" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -497,10 +497,10 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
             <button
               type="button"
               onClick={() => setType('expense')}
-              className={`py-2 text-xs font-semibold rounded-xl border transition-colors ${
+              className={`py-2 text-xs font-semibold rounded-xl border transition-all active:scale-[0.98] ${
                 type === 'expense'
-                  ? 'bg-rose-600/20 border-rose-500/40 text-rose-400'
-                  : 'bg-slate-850 border-slate-750 text-slate-400'
+                  ? 'bg-rose-500/15 border-rose-500/40 text-rose-400'
+                  : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
               }`}
             >
               Expense (-)
@@ -508,10 +508,10 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
             <button
               type="button"
               onClick={() => setType('income')}
-              className={`py-2 text-xs font-semibold rounded-xl border transition-colors ${
+              className={`py-2 text-xs font-semibold rounded-xl border transition-all active:scale-[0.98] ${
                 type === 'income'
-                  ? 'bg-emerald-600/20 border-emerald-500/40 text-emerald-400'
-                  : 'bg-slate-850 border-slate-750 text-slate-400'
+                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+                  : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
               }`}
             >
               Income (+)
@@ -520,7 +520,7 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
 
           {/* Amount */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Amount (INR)</label>
+            <label className="field-label">Amount (INR)</label>
             <input
               type="number"
               step="0.01"
@@ -528,58 +528,58 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Category</label>
+            <label className="field-label">Category</label>
             <input
               type="text"
               required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               placeholder="e.g. Groceries, Rent, Salary, Travel, Utilities"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+            <label className="field-label">Description</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes or merchant name"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           {/* Occurred At */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Date (Optional)</label>
+            <label className="field-label">Date (Optional)</label>
             <input
               type="date"
               value={occurredAt}
               onChange={(e) => setOccurredAt(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-50"
+              className="btn-primary"
             >
               {mutation.isPending ? 'Saving...' : 'Save Transaction'}
             </button>
@@ -633,37 +633,37 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <h2 className="text-base font-semibold text-white">Add Recurring Bill</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="icon-btn" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Bill Name</label>
+            <label className="field-label">Bill Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Home Wi-Fi, Electricity, Netflix, Gym"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Amount (INR)</label>
+            <label className="field-label">Amount (INR)</label>
             <input
               type="number"
               step="0.01"
@@ -671,17 +671,17 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Frequency</label>
+              <label className="field-label">Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as BillFrequency)}
-                className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                className="field"
               >
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
@@ -691,53 +691,53 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Category</label>
+              <label className="field-label">Category</label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Utilities"
-                className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="field"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Next Due Date</label>
+            <label className="field-label">Next Due Date</label>
             <input
               type="date"
               required
               value={nextDueAt}
               onChange={(e) => setNextDueAt(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field"
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2.5 pt-1">
             <input
               type="checkbox"
               id="autopay"
               checked={autopay}
               onChange={(e) => setAutopay(e.target.checked)}
-              className="rounded bg-slate-800 border-slate-700 text-brand-600 focus:ring-brand-500"
+              className="w-4 h-4 rounded bg-slate-900 border-white/20 text-brand-500 focus:ring-brand-500"
             />
-            <label htmlFor="autopay" className="text-xs text-slate-300">
+            <label htmlFor="autopay" className="text-xs text-slate-300 cursor-pointer">
               Autopay enabled via credit card / standing order
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-50"
+              className="btn-primary"
             >
               {mutation.isPending ? 'Saving...' : 'Save Bill'}
             </button>

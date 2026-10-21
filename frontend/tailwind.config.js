@@ -33,8 +33,27 @@ export default {
         },
       },
       boxShadow: {
-        card: '0 1px 0 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6)',
-        lift: '0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(20 184 166 / 0.18)',
+        card: '0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6)',
+        lift: '0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(20 184 166 / 0.20)',
+        modal: '0 1px 0 0 rgb(255 255 255 / 0.10) inset, 0 24px 48px -12px rgb(0 0 0 / 0.75)',
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        snappy: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        modalIn: {
+          '0%': { opacity: '0', transform: 'scale(0.97) translateY(6px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn 150ms ease-out forwards',
+        'modal-in': 'modalIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
     },
   },

@@ -140,7 +140,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onOpen, onToggleFavori
           onOpen(item);
         }
       }}
-      className="group flex h-full cursor-pointer flex-col rounded-2xl border border-white/[0.07] bg-slate-900/70 p-5 shadow-card transition duration-150 hover:-translate-y-0.5 hover:border-brand-400/25 hover:bg-slate-900 hover:shadow-lift"
+      className="group flex h-full cursor-pointer flex-col rounded-2xl border border-white/[0.07] bg-slate-900/70 p-5 shadow-card transition duration-200 ease-spring hover:-translate-y-0.5 hover:border-brand-400/25 hover:bg-slate-900 hover:shadow-lift active:scale-[0.985] select-none"
     >
       {/* Header: icon tile, kind label, favourite */}
       <div className="flex items-start gap-3">

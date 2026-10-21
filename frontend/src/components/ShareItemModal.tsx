@@ -62,10 +62,10 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="modal-backdrop">
+      <div className="modal-surface max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
               <Share2 className="w-4 h-4" />
@@ -77,7 +77,8 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="icon-btn"
+            aria-label="Close"
           >
             <X className="w-4 h-4" />
           </button>
@@ -101,7 +102,7 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
 
           {/* Recipient Email */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Recipient Email Address
             </label>
             <div className="relative">
@@ -112,7 +113,7 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
                 placeholder="family.member@example.com"
-                className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="field pl-9"
               />
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -122,17 +123,17 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
 
           {/* Permissions */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Permission Level
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setPermissions('view')}
-                className={`flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border text-xs font-medium transition-all ${
+                className={`flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border text-xs font-medium transition-all active:scale-[0.98] ${
                   permissions === 'view'
-                    ? 'bg-brand-500/15 border-brand-500 text-brand-300'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-brand-500/15 border-brand-500 text-brand-300 shadow-sm'
+                    : 'bg-white/[0.04] border-white/[0.08] text-slate-400 hover:text-white hover:border-white/20'
                 }`}
               >
                 <Shield className="w-3.5 h-3.5" />
@@ -141,10 +142,10 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPermissions('edit')}
-                className={`flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border text-xs font-medium transition-all ${
+                className={`flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border text-xs font-medium transition-all active:scale-[0.98] ${
                   permissions === 'edit'
-                    ? 'bg-brand-500/15 border-brand-500 text-brand-300'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-brand-500/15 border-brand-500 text-brand-300 shadow-sm'
+                    : 'bg-white/[0.04] border-white/[0.08] text-slate-400 hover:text-white hover:border-white/20'
                 }`}
               >
                 <Shield className="w-3.5 h-3.5" />
@@ -155,7 +156,7 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
 
           {/* Expiration Date */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="field-label">
               Expiry Date (Optional)
             </label>
             <div className="relative">
@@ -164,7 +165,7 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
                 type="date"
                 value={expiresAt}
                 onChange={(e) => setExpiresAt(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500"
+                className="field pl-9"
               />
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -173,19 +174,19 @@ export const ShareItemModal: React.FC<ShareItemModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-white/[0.08]">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 rounded-xl transition-colors"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || success}
-              className="flex items-center space-x-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-slate-950 text-xs font-semibold rounded-xl shadow-lg shadow-brand-500/20 transition-all"
+              className="btn-primary"
             >
               {loading ? (
                 <>

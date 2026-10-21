@@ -8,7 +8,6 @@ import {
   FileText,
   Link as LinkIcon,
   Layers,
-  Sparkles
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import type { Item, ItemKind } from '../types';
@@ -117,7 +116,7 @@ export const TrashPage: React.FC = () => {
           <button
             onClick={handleEmptyTrash}
             disabled={emptyTrashMutation.isPending}
-            className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 text-sm font-medium transition-colors"
+            className="btn-danger"
           >
             <AlertTriangle className="w-4 h-4" />
             <span>Empty Trash ({trashedItems.length})</span>
@@ -135,9 +134,9 @@ export const TrashPage: React.FC = () => {
 
       {/* Empty State */}
       {!isLoading && trashedItems.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-            <Sparkles className="w-6 h-6 text-emerald-400" />
+        <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
+          <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-emerald-400">
+            <Trash2 className="w-6 h-6" />
           </div>
           <h4 className="text-base font-semibold text-white">Trash is empty</h4>
           <p className="text-xs text-slate-400 max-w-sm">
@@ -152,7 +151,7 @@ export const TrashPage: React.FC = () => {
           {trashedItems.map((item) => (
             <div
               key={item.id}
-              className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="panel rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
@@ -173,7 +172,7 @@ export const TrashPage: React.FC = () => {
                 <button
                   onClick={() => restoreMutation.mutate(item.id)}
                   disabled={restoreMutation.isPending}
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-medium border border-slate-700 transition-colors"
+                  className="btn-secondary !text-xs !py-1.5 !px-3"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Restore</span>
@@ -181,7 +180,7 @@ export const TrashPage: React.FC = () => {
                 <button
                   onClick={() => handlePermanentDelete(item)}
                   disabled={permanentDeleteMutation.isPending}
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-rose-600/15 hover:bg-rose-600/25 text-rose-400 text-xs font-medium border border-rose-500/20 transition-colors"
+                  className="btn-danger !text-xs !py-1.5 !px-3"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Delete Forever</span>
