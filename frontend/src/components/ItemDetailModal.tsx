@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   X,
   FileText,
@@ -17,7 +17,8 @@ import {
   Paperclip,
   Upload,
   Loader2,
-  Share2
+  Share2,
+  Lock,
 } from 'lucide-react';
 import type { Item, Collection } from '../types';
 import { vaultApi } from '../lib/vaultApi';
@@ -46,6 +47,21 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   const [uploadingAttachment, setUploadingAttachment] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Keyboard shortcut: Escape to dismiss QuickLook
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isTyping =
+        target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (e.key === 'Escape' && !isTyping) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   if (!item) return null;
 
@@ -99,35 +115,35 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
     switch (item.kind) {
       case 'file':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-500/15 text-brand-400 border border-brand-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-500/15 text-brand-300 border border-brand-500/30">
             <Paperclip className="w-3 h-3" />
             <span>File</span>
           </span>
         );
       case 'note':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
             <FileText className="w-3 h-3" />
             <span>Note</span>
           </span>
         );
       case 'link':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">
             <LinkIcon className="w-3 h-3" />
             <span>Link</span>
           </span>
         );
       case 'record':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
             <Layers className="w-3 h-3" />
             <span>Record</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300">
             <span>{item.kind}</span>
           </span>
         );
@@ -135,60 +151,124 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-surface max-w-xl">
-        {/* Header */}
-        <div className="flex items-start justify-between px-6 py-5 border-b border-white/[0.08] bg-slate-900/60">
-          <div className="space-y-1.5 pr-4">
-            <div className="flex items-center space-x-2">
-              {getKindBadge()}
-              {collection && (
-                <span className="text-xs text-slate-300 bg-white/[0.06] border border-white/[0.08] px-2.5 py-0.5 rounded-full font-medium">
-                  {collection.name}
-                </span>
-              )}
-            </div>
-            <h3 className="text-xl font-bold text-white tracking-tight leading-snug">{item.title}</h3>
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className="modal-surface max-w-2xl bg-slate-900 border border-white/10 shadow-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* macOS QuickLook Sheet Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70 backdrop-blur-xl">
+          <div className="flex items-center gap-2 min-w-0 pr-4">
+            {getKindBadge()}
+            {collection && (
+              <span className="text-xs text-slate-300 bg-white/[0.06] border border-white/[0.08] px-2.5 py-0.5 rounded-full font-medium truncate max-w-[160px]">
+                {collection.name}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-brand-300 bg-brand-500/10 border border-brand-500/20 px-2 py-0.5 rounded-full">
+              <Lock className="w-2.5 h-2.5" />
+              AES-256-GCM
+            </span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => onToggleFavorite(item.id)}
-              className="icon-btn hover:text-amber-400"
+              className="icon-btn h-8 w-8 hover:text-amber-400"
               title="Toggle Favorite"
+              aria-label="Toggle Favorite"
             >
-              <Star className={`w-5 h-5 ${item.favorite ? 'fill-amber-400 text-amber-400' : ''}`} />
+              <Star className={`w-4 h-4 ${item.favorite ? 'fill-amber-400 text-amber-400' : 'text-slate-400'}`} />
             </button>
             <button
               onClick={onClose}
-              className="icon-btn"
-              aria-label="Close"
+              className="icon-btn h-8 w-8"
+              aria-label="Close QuickLook"
+              title="Close (Esc)"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
-          {/* Description */}
+        {/* Item Title Bar */}
+        <div className="px-6 pt-5 pb-3 bg-slate-900">
+          <h3 className="text-xl font-bold text-white tracking-tight leading-snug">
+            {item.title}
+          </h3>
           {item.description && (
-            <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-1">
-                Description
-              </h4>
-              <p className="text-sm text-slate-200">{item.description}</p>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+              {item.description}
+            </p>
+          )}
+        </div>
+
+        {/* QuickLook Inspection Body */}
+        <div className="px-6 py-4 space-y-5 max-h-[65vh] overflow-y-auto">
+          {/* Note content viewer */}
+          {item.kind === 'note' && item.content && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Decrypted Note
+                </h4>
+                <button
+                  onClick={() => handleCopy(item.content!)}
+                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-brand-300 transition-colors"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copied ? 'Copied' : 'Copy'}</span>
+                </button>
+              </div>
+              <div className="bg-slate-950/80 border border-white/[0.07] rounded-xl p-4 text-xs font-mono text-slate-200 whitespace-pre-wrap leading-relaxed shadow-inner">
+                {item.content}
+              </div>
             </div>
           )}
 
-          {/* Attached files */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between gap-3">
-              <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-                <Paperclip className="h-4 w-4 text-brand-300" />
-                Attached files
+          {/* Link URL preview */}
+          {item.kind === 'link' && item.url && (
+            <div className="space-y-1.5">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Target Link
+              </h4>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-950/80 border border-white/[0.08] hover:border-brand-500/50 text-brand-300 text-xs font-medium transition-colors w-full break-all"
+              >
+                <span className="truncate">{item.url}</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+              </a>
+            </div>
+          )}
+
+          {/* Record custom fields */}
+          {item.kind === 'record' && Object.keys(item.customFields || {}).length > 0 && (
+            <div className="space-y-1.5">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Record Attributes
+              </h4>
+              <div className="rounded-xl border border-white/[0.07] overflow-hidden divide-y divide-white/[0.06] bg-slate-950/60">
+                {Object.entries(item.customFields).map(([k, v]) => (
+                  <div key={k} className="flex justify-between p-3 text-xs">
+                    <span className="font-medium text-slate-400">{k}</span>
+                    <span className="text-slate-100 font-mono tabular-nums">{String(v)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Attached Files & Attachments Section */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h4 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <Paperclip className="h-3.5 w-3.5 text-brand-400" />
+                Attached Assets
                 {item.files && item.files.length > 0 && (
-                  <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-xs font-medium tabular-nums text-slate-400">
+                  <span className="rounded bg-white/[0.06] px-1.5 py-0.2 text-[10px] font-semibold tabular-nums text-slate-300">
                     {item.files.length}
                   </span>
                 )}
@@ -206,14 +286,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingAttachment}
-                  className="btn-secondary !text-xs !h-8 !px-3"
+                  className="btn-secondary !text-xs !h-7 !px-2.5"
                 >
                   {uploadingAttachment ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <Loader2 className="h-3 w-3 animate-spin" />
                   ) : (
-                    <Upload className="h-3.5 w-3.5" />
+                    <Upload className="h-3 w-3" />
                   )}
-                  Attach file
+                  Attach File
                 </button>
               </div>
             </div>
@@ -225,45 +305,45 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   return (
                     <li
                       key={file.id}
-                      className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-slate-950/60 p-3"
+                      className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-slate-950/70 p-3"
                     >
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
-                        <FileTypeIcon className="h-[18px] w-[18px]" />
+                      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+                        <FileTypeIcon className="h-4 w-4" />
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-white" title={file.originalName}>
+                        <p className="truncate text-xs font-medium text-white" title={file.originalName}>
                           {file.originalName}
                         </p>
-                        <p className="mt-0.5 truncate text-xs text-slate-500">
+                        <p className="mt-0.5 truncate text-[11px] text-slate-500 tabular-nums">
                           {formatFileSize(file.sizeBytes)} · {file.mimeType}
                         </p>
                       </div>
 
-                      <div className="flex shrink-0 items-center gap-0.5">
+                      <div className="flex shrink-0 items-center gap-1">
                         <button
                           onClick={() => vaultApi.downloadFile(file.id, file.originalName, true)}
-                          className="icon-btn hover:text-brand-300"
-                          title="Preview"
+                          className="icon-btn h-7 w-7 hover:text-brand-300"
+                          title="Instant Preview"
                           aria-label={`Preview ${file.originalName}`}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => vaultApi.downloadFile(file.id, file.originalName, false)}
-                          className="icon-btn"
-                          title="Download"
+                          className="icon-btn h-7 w-7"
+                          title="Download Decrypted File"
                           aria-label={`Download ${file.originalName}`}
                         >
-                          <Download className="h-4 w-4" />
+                          <Download className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteAttachment(file.id)}
-                          className="icon-btn hover:text-rose-300"
-                          title="Delete"
+                          className="icon-btn h-7 w-7 hover:text-rose-300"
+                          title="Delete File"
                           aria-label={`Delete ${file.originalName}`}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </li>
@@ -271,80 +351,24 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                 })}
               </ul>
             ) : (
-              <p className="rounded-xl border border-dashed border-white/10 px-4 py-5 text-center text-sm text-slate-500">
-                No files attached yet.
+              <p className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-center text-xs text-slate-500">
+                No encrypted files attached to this entry.
               </p>
             )}
           </div>
 
-          {/* Note content */}
-          {item.kind === 'note' && item.content && (
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <h4 className="text-sm font-semibold text-slate-200">
-                  Content
-                </h4>
-                <button
-                  onClick={() => handleCopy(item.content!)}
-                  className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-brand-400 transition-colors"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? 'Copied' : 'Copy'}</span>
-                </button>
-              </div>
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap font-mono text-xs leading-relaxed">
-                {item.content}
-              </div>
-            </div>
-          )}
-
-          {/* Link URL */}
-          {item.kind === 'link' && item.url && (
-            <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-1.5">
-                Target Link
-              </h4>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-brand-500/50 text-brand-400 text-sm font-medium transition-colors w-full break-all"
-              >
-                <ExternalLink className="w-4 h-4 flex-shrink-0" />
-                <span>{item.url}</span>
-              </a>
-            </div>
-          )}
-
-          {/* Record custom fields */}
-          {item.kind === 'record' && Object.keys(item.customFields || {}).length > 0 && (
-            <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-2">
-                Custom Fields
-              </h4>
-              <div className="rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
-                {Object.entries(item.customFields).map(([k, v]) => (
-                  <div key={k} className="flex justify-between p-3 text-xs bg-slate-950/40">
-                    <span className="font-semibold text-slate-400">{k}</span>
-                    <span className="text-white font-mono">{String(v)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Tags */}
           {item.tags && item.tags.length > 0 && (
-            <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-2 flex items-center space-x-1">
-                <Tag className="w-3.5 h-3.5" />
+            <div className="space-y-1.5">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                <Tag className="w-3 h-3" />
                 <span>Tags</span>
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-750"
+                    className="px-2 py-0.5 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-white/[0.06]"
                   >
                     #{tag}
                   </span>
@@ -353,38 +377,38 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             </div>
           )}
 
-          {/* Metadata & Dates */}
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.08] text-xs text-slate-400">
+          {/* Cryptographic Provenance & Dates */}
+          <div className="grid grid-cols-2 gap-4 pt-3.5 border-t border-white/[0.07] text-xs text-slate-400">
             {item.eventDate && (
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-slate-500" />
+              <div className="flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5 text-slate-500" />
                 <div>
-                  <span className="block text-[11px] text-slate-500">Event date</span>
-                  <span className="text-slate-300">{new Date(item.eventDate).toLocaleDateString()}</span>
+                  <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Event Date</span>
+                  <span className="text-slate-300 tabular-nums">{new Date(item.eventDate).toLocaleDateString()}</span>
                 </div>
               </div>
             )}
             {item.expiresAt && (
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-slate-500" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-slate-500" />
                 <div>
-                  <span className="block text-[11px] text-slate-500">Expires</span>
-                  <span className="text-amber-400 font-semibold">{new Date(item.expiresAt).toLocaleDateString()}</span>
+                  <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Expires</span>
+                  <span className="text-amber-400 font-semibold tabular-nums">{new Date(item.expiresAt).toLocaleDateString()}</span>
                 </div>
               </div>
             )}
-            <div className="col-span-2 text-[11px] text-slate-500">
-              Created {new Date(item.createdAt).toLocaleString()} • Last modified {new Date(item.updatedAt).toLocaleString()}
+            <div className="col-span-2 text-[10px] text-slate-500 tabular-nums">
+              Created {new Date(item.createdAt).toLocaleString()} · Updated {new Date(item.updatedAt).toLocaleString()}
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.08] bg-slate-900/60">
-          <div className="flex items-center space-x-2">
+        {/* QuickLook Sheet Footer */}
+        <div className="flex items-center justify-between px-6 py-3.5 border-t border-white/[0.08] bg-slate-950/70 backdrop-blur-xl">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setShareOpen(true)}
-              className="btn-secondary !text-xs !py-1.5 !px-3"
+              className="btn-secondary !text-xs !py-1 !px-3"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Share</span>
@@ -392,7 +416,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="btn-danger !text-xs !py-1.5 !px-3"
+              className="btn-danger !text-xs !py-1 !px-3"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Move to Trash</span>
@@ -401,9 +425,9 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="btn-ghost !text-xs !py-1.5 !px-4"
+            className="btn-ghost !text-xs !py-1 !px-3.5"
           >
-            Close
+            Done
           </button>
         </div>
       </div>

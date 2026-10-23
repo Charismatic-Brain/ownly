@@ -4,17 +4,14 @@ import {
   UserPlus,
   Share2,
   Shield,
-  Clock,
   Trash2,
   Mail,
   Check,
   X,
-  FileText,
   Paperclip,
   Download,
   AlertCircle,
   Loader2,
-  ExternalLink,
   Crown,
   Eye,
 } from 'lucide-react';
@@ -70,7 +67,6 @@ export const FamilyPage: React.FC = () => {
       setFamilies(fams);
       setPendingInvites(invites);
       if (fams.length > 0 && !selectedFamily) {
-        // Load details for first family
         const details = await vaultApi.getFamily(fams[0].id);
         setSelectedFamily(details);
       }
@@ -196,47 +192,43 @@ export const FamilyPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-7xl space-y-7">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <Users className="w-7 h-7 text-brand-400" />
-            <span>Family Vault & Sharing</span>
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Manage your family group, coordinate trusted access, and inspect shared vault records.
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Family Vault & Sharing</h1>
+          <p className="mt-1 max-w-xl text-xs text-slate-400 sm:text-sm">
+            Coordinate sovereign family access, manage circles, and inspect cryptographic shared items.
           </p>
         </div>
 
-        {/* Create Family Button */}
         <button
           onClick={() => setCreateFamilyOpen(true)}
-          className="btn-primary self-start sm:self-auto"
+          className="btn-primary !text-xs !py-1.5 !px-3.5 self-start sm:self-auto"
         >
-          <UserPlus className="w-4 h-4" />
+          <UserPlus className="h-3.5 w-3.5" />
           <span>New Family Group</span>
         </button>
-      </div>
+      </header>
 
-      {/* Global Alerts */}
+      {/* Global Status Alerts */}
       {actionSuccess && (
-        <div className="p-3.5 bg-teal-500/10 border border-teal-500/20 rounded-xl flex items-center space-x-2.5 text-xs text-teal-400 animate-fade-in">
-          <Check className="w-4 h-4 flex-shrink-0" />
+        <div className="panel p-3 border-teal-500/25 bg-teal-500/10 flex items-center gap-2 text-xs text-teal-300 animate-fade-in">
+          <Check className="w-4 h-4 shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
       {actionError && (
-        <div className="p-3.5 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center space-x-2.5 text-xs text-red-400 animate-fade-in">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="panel p-3 border-rose-500/25 bg-rose-500/10 flex items-center gap-2 text-xs text-rose-300 animate-fade-in">
+          <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{actionError}</span>
         </div>
       )}
 
       {/* Pending Invitations Banner */}
       {pendingInvites.length > 0 && (
-        <div className="p-4 bg-gradient-to-r from-brand-600/20 via-brand-500/10 to-teal-500/10 border border-brand-500/30 rounded-2xl shadow-lg space-y-3">
-          <div className="flex items-center space-x-2 text-brand-400 text-sm font-semibold">
+        <div className="panel p-4 border-brand-500/30 bg-slate-900/90 space-y-3 shadow-lift">
+          <div className="flex items-center gap-2 text-brand-300 text-xs font-semibold uppercase tracking-wider">
             <Mail className="w-4 h-4" />
             <span>Pending Family Invitations</span>
           </div>
@@ -244,27 +236,27 @@ export const FamilyPage: React.FC = () => {
             {pendingInvites.map((inv) => (
               <div
                 key={inv.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-900/80 border border-slate-800 rounded-xl gap-3"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-950/80 border border-white/[0.07] rounded-xl gap-3"
               >
                 <div>
-                  <span className="text-sm font-medium text-white">{inv.familyName}</span>
-                  <span className="text-xs text-slate-400 block">
-                    Invited by {inv.invitedByEmail || 'Family Administrator'} • Role: {inv.role}
+                  <span className="text-xs font-semibold text-white">{inv.familyName}</span>
+                  <span className="text-[11px] text-slate-400 block">
+                    Invited by {inv.invitedByEmail || 'Family Administrator'} · Role: {inv.role}
                   </span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleRespondInvite(inv.id, 'accepted')}
-                    className="inline-flex items-center space-x-1 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-semibold text-xs rounded-lg transition-colors"
+                    className="btn-primary !text-xs !py-1 !px-3"
                   >
-                    <Check className="w-3.5 h-3.5" />
+                    <Check className="w-3 h-3" />
                     <span>Accept</span>
                   </button>
                   <button
                     onClick={() => handleRespondInvite(inv.id, 'rejected')}
-                    className="inline-flex items-center space-x-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition-colors"
+                    className="btn-ghost !text-xs !py-1 !px-3"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-3 h-3" />
                     <span>Decline</span>
                   </button>
                 </div>
@@ -274,76 +266,50 @@ export const FamilyPage: React.FC = () => {
         </div>
       )}
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center space-x-1 p-1 bg-slate-900 border border-slate-800 rounded-xl w-fit">
-        <button
-          onClick={() => setActiveTab('groups')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-            activeTab === 'groups'
-              ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          <Users className="w-3.5 h-3.5" />
-          <span>Family Groups</span>
-          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
-            {families.length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('inbound')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-            activeTab === 'inbound'
-              ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          <Shield className="w-3.5 h-3.5" />
-          <span>Shared With Me</span>
-          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
-            {inboundShares.length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('outbound')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-            activeTab === 'outbound'
-              ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          <span>Shared By Me</span>
-          <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-slate-300">
-            {outboundShares.length}
-          </span>
-        </button>
+      {/* Recessed Segmented Navigation */}
+      <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+        <div className="segmented-track">
+          <button
+            onClick={() => setActiveTab('groups')}
+            className={`segmented-item ${activeTab === 'groups' ? 'segmented-item-active' : ''}`}
+          >
+            Family Circles ({families.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('inbound')}
+            className={`segmented-item ${activeTab === 'inbound' ? 'segmented-item-active' : ''}`}
+          >
+            Shared With Me ({inboundShares.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('outbound')}
+            className={`segmented-item ${activeTab === 'outbound' ? 'segmented-item-active' : ''}`}
+          >
+            Shared By Me ({outboundShares.length})
+          </button>
+        </div>
       </div>
 
       {/* Tab 1: Family Groups */}
       {activeTab === 'groups' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Families List Sidebar */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Your Family Vaults
-            </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-[16rem_minmax(0,1fr)] gap-6 items-start">
+          {/* Families List Rail */}
+          <div className="panel p-3 space-y-2">
+            <h3 className="source-list-header !p-1">Your Circles</h3>
             {loadingGroups ? (
-              <div className="p-8 text-center text-slate-500 text-xs flex items-center justify-center space-x-2">
+              <div className="p-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin text-brand-400" />
-                <span>Loading families...</span>
+                <span>Loading circles...</span>
               </div>
             ) : families.length === 0 ? (
-              <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl text-center space-y-3">
-                <Users className="w-8 h-8 text-slate-600 mx-auto" />
-                <p className="text-xs text-slate-400">You don't belong to any family group yet.</p>
+              <div className="p-5 rounded-xl border border-dashed border-white/10 text-center space-y-2">
+                <Users className="w-6 h-6 text-slate-500 mx-auto" />
+                <p className="text-xs text-slate-400">No family groups created.</p>
                 <button
                   onClick={() => setCreateFamilyOpen(true)}
-                  className="px-3 py-1.5 bg-brand-500/10 border border-brand-500/20 hover:bg-brand-500/20 text-brand-400 text-xs font-semibold rounded-lg transition-colors"
+                  className="btn-primary !text-xs !py-1 !px-2.5 mt-1"
                 >
-                  Create Your First Group
+                  Create Group
                 </button>
               </div>
             ) : (
@@ -351,25 +317,22 @@ export const FamilyPage: React.FC = () => {
                 <div
                   key={fam.id}
                   onClick={() => handleSelectFamily(fam.id)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-3 rounded-xl border cursor-pointer transition-all select-none ${
                     selectedFamily?.id === fam.id
-                      ? 'bg-slate-850 border-brand-500/40 shadow-lg shadow-brand-500/5'
-                      : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                      ? 'bg-slate-800/80 border-brand-500/40 shadow-sm'
+                      : 'bg-slate-950/60 border-white/[0.06] hover:border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-white">{fam.name}</span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-brand-400 border border-brand-500/20">
+                    <span className="text-xs font-semibold text-white truncate pr-2">{fam.name}</span>
+                    <span className="rounded bg-brand-500/10 px-1.5 py-0.2 text-[9px] font-semibold text-brand-300 border border-brand-500/20 uppercase">
                       {fam.userRole === 'admin' ? 'Admin' : 'Member'}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-3 text-xs text-slate-400 mt-2">
-                    <span className="flex items-center space-x-1">
-                      <Users className="w-3 h-3 text-slate-500" />
-                      <span>{fam.memberCount} members</span>
-                    </span>
-                    <span>•</span>
-                    <span>Created {new Date(fam.createdAt).toLocaleDateString()}</span>
+                  <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-1 tabular-nums">
+                    <span>{fam.memberCount} members</span>
+                    <span>·</span>
+                    <span>{new Date(fam.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
               ))
@@ -377,26 +340,26 @@ export const FamilyPage: React.FC = () => {
           </div>
 
           {/* Family Details & Member Roster */}
-          <div className="lg:col-span-2">
+          <div className="min-w-0">
             {selectedFamily ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+              <div className="panel p-5 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.07] pb-4">
                   <div>
-                    <h2 className="text-lg font-bold text-white flex items-center space-x-2">
+                    <h2 className="text-base font-bold text-white flex items-center gap-2">
                       <span>{selectedFamily.name}</span>
-                      <span className="text-xs font-normal text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full">
+                      <span className="text-xs font-normal text-slate-400 bg-slate-800 border border-white/[0.08] px-2 py-0.5 rounded-full tabular-nums">
                         {selectedFamily.members.length} members
                       </span>
                     </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Established on {new Date(selectedFamily.createdAt).toLocaleDateString()}
+                    <p className="text-xs text-slate-400 mt-0.5 tabular-nums">
+                      Circle created on {new Date(selectedFamily.createdAt).toLocaleDateString()}
                     </p>
                   </div>
 
                   {selectedFamily.userRole === 'admin' && (
                     <button
                       onClick={() => setInviteModalOpen(true)}
-                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-semibold text-xs rounded-xl shadow-md shadow-brand-500/10 transition-colors self-start sm:self-auto"
+                      className="btn-primary !text-xs !py-1 !px-3 self-start sm:self-auto"
                     >
                       <UserPlus className="w-3.5 h-3.5" />
                       <span>Invite Member</span>
@@ -405,42 +368,40 @@ export const FamilyPage: React.FC = () => {
                 </div>
 
                 {/* Member Roster */}
-                <div className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    Member Roster & Permissions
-                  </h4>
-                  <div className="space-y-2">
+                <div className="space-y-2.5">
+                  <h4 className="source-list-header !p-0">Member Roster & Permissions</h4>
+                  <div className="space-y-1.5">
                     {selectedFamily.members.map((member) => (
                       <div
                         key={member.id}
-                        className="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800/80 rounded-xl"
+                        className="flex items-center justify-between p-3 bg-slate-950/70 border border-white/[0.06] rounded-xl"
                       >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300 uppercase border border-slate-700">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-slate-800 text-xs font-semibold text-slate-200 border border-white/10 uppercase">
                             {member.displayName?.slice(0, 2) || member.email?.slice(0, 2) || 'FM'}
                           </div>
-                          <div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-semibold text-white">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold text-white truncate">
                                 {member.displayName || member.email}
                               </span>
                               {member.role === 'admin' ? (
-                                <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-semibold text-amber-300 border border-amber-500/20">
                                   <Crown className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>
                               ) : (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-400">
+                                <span className="rounded bg-slate-800 px-1.5 py-0.2 text-[9px] font-medium text-slate-400">
                                   Member
                                 </span>
                               )}
                               {member.status === 'pending' && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                                <span className="rounded bg-purple-500/10 px-1.5 py-0.2 text-[9px] font-medium text-purple-300 border border-purple-500/20">
                                   Pending Invite
                                 </span>
                               )}
                             </div>
-                            <span className="text-xs text-slate-500">{member.email}</span>
+                            <span className="text-[11px] text-slate-500 truncate block">{member.email}</span>
                           </div>
                         </div>
 
@@ -448,7 +409,7 @@ export const FamilyPage: React.FC = () => {
                         {selectedFamily.userRole === 'admin' && member.role !== 'admin' && (
                           <button
                             onClick={() => handleRemoveMember(member.userId)}
-                            className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-slate-800 transition-colors"
+                            className="icon-btn h-7 w-7 hover:text-rose-400"
                             title="Remove member"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -460,8 +421,8 @@ export const FamilyPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="p-12 bg-slate-900 border border-slate-800 rounded-2xl text-center text-slate-500 text-sm">
-                Select a family group to inspect members and manage invitations.
+              <div className="panel p-12 text-center text-slate-400 text-xs">
+                Select a family group to inspect members and manage circle permissions.
               </div>
             )}
           </div>
@@ -470,70 +431,52 @@ export const FamilyPage: React.FC = () => {
 
       {/* Tab 2: Shared With Me (Inbound) */}
       {activeTab === 'inbound' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Documents & Items Granted to You
-            </h3>
-            <span className="text-xs text-slate-500">{inboundShares.length} shared records</span>
+            <h3 className="source-list-header !p-0">Items Granted to You</h3>
+            <span className="text-xs text-slate-500 tabular-nums">{inboundShares.length} shared records</span>
           </div>
 
           {loadingShares ? (
-            <div className="p-12 text-center text-slate-500 text-xs flex items-center justify-center space-x-2">
+            <div className="p-12 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin text-brand-400" />
-              <span>Checking permissions...</span>
+              <span>Verifying cryptographic access...</span>
             </div>
           ) : inboundShares.length === 0 ? (
-            <div className="p-12 bg-slate-900 border border-slate-800 rounded-2xl text-center space-y-2">
-              <Shield className="w-8 h-8 text-slate-600 mx-auto" />
-              <p className="text-sm font-medium text-slate-300">No items shared with you</p>
-              <p className="text-xs text-slate-500">
-                When a family member or user grants you access to a document or note, it appears here.
+            <div className="panel p-12 text-center space-y-2 border-dashed">
+              <Shield className="w-7 h-7 text-slate-500 mx-auto" />
+              <p className="text-xs font-semibold text-slate-300">No items shared with you</p>
+              <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
+                When a family member or user grants you access to an encrypted document or note, it appears here.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {inboundShares.map((share) => (
                 <div
                   key={share.id}
-                  className="p-5 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl space-y-3 transition-all flex flex-col justify-between"
+                  className="panel p-4 space-y-3 flex flex-col justify-between hover:border-brand-500/25 transition-all"
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20">
-                        <FileText className="w-3 h-3" />
-                        <span className="capitalize">{share.resourceType}</span>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="rounded bg-brand-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-brand-300 border border-brand-500/20 uppercase">
+                        {share.resourceType}
                       </span>
-                      <span className="text-[10px] font-medium text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">
-                        {share.permissions === 'view' ? 'View Only' : 'Can Edit'}
+                      <span className="text-[10px] text-slate-500 tabular-nums">
+                        {share.expiresAt ? `Expires ${new Date(share.expiresAt).toLocaleDateString()}` : 'Never expires'}
                       </span>
                     </div>
-
-                    <h4 className="text-base font-bold text-white leading-snug truncate">
-                      {share.resourceTitle || 'Shared Document'}
-                    </h4>
-
-                    <div className="space-y-1 text-xs text-slate-400">
-                      <p className="flex items-center space-x-1.5 text-slate-400">
-                        <Mail className="w-3 h-3 text-slate-500" />
-                        <span className="truncate">Shared by {share.ownerEmail || 'Vault Owner'}</span>
-                      </p>
-                      {share.expiresAt && (
-                        <p className="flex items-center space-x-1.5 text-amber-400">
-                          <Clock className="w-3 h-3" />
-                          <span>Expires {new Date(share.expiresAt).toLocaleDateString()}</span>
-                        </p>
-                      )}
-                    </div>
+                    <h4 className="text-xs font-semibold text-white truncate">{share.resourceTitle}</h4>
+                    <p className="text-[10px] text-slate-500">Shared by {share.ownerEmail || 'Family Member'}</p>
                   </div>
 
                   <button
                     onClick={() => handleOpenSharedItem(share.resourceId)}
                     disabled={loadingItemDetail}
-                    className="w-full mt-2 py-2 px-3 bg-brand-500/15 hover:bg-brand-500/25 border border-brand-500/30 text-brand-300 text-xs font-semibold rounded-xl flex items-center justify-center space-x-2 transition-colors"
+                    className="btn-secondary !text-xs !py-1 w-full"
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    <span>View Record</span>
+                    <span>QuickLook Preview</span>
                   </button>
                 </div>
               ))}
@@ -544,138 +487,86 @@ export const FamilyPage: React.FC = () => {
 
       {/* Tab 3: Shared By Me (Outbound) */}
       {activeTab === 'outbound' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Active Access Grants Given to Others
-            </h3>
-            <span className="text-xs text-slate-500">{outboundShares.length} active shares</span>
+            <h3 className="source-list-header !p-0">Items You Granted</h3>
+            <span className="text-xs text-slate-500 tabular-nums">{outboundShares.length} active shares</span>
           </div>
 
           {loadingShares ? (
-            <div className="p-12 text-center text-slate-500 text-xs flex items-center justify-center space-x-2">
+            <div className="p-12 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin text-brand-400" />
-              <span>Loading access grants...</span>
+              <span>Loading shares...</span>
             </div>
           ) : outboundShares.length === 0 ? (
-            <div className="p-12 bg-slate-900 border border-slate-800 rounded-2xl text-center space-y-2">
-              <Share2 className="w-8 h-8 text-slate-600 mx-auto" />
-              <p className="text-sm font-medium text-slate-300">You haven't shared any vault items</p>
-              <p className="text-xs text-slate-500">
-                You can share individual documents or notes securely from your Vault page with granular permissions.
+            <div className="panel p-12 text-center space-y-2 border-dashed">
+              <Share2 className="w-7 h-7 text-slate-500 mx-auto" />
+              <p className="text-xs font-semibold text-slate-300">No active outbound shares</p>
+              <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
+                You haven't shared any vault items with others yet. Use the "Share" action inside any item card.
               </p>
             </div>
           ) : (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-950/80 border-b border-slate-800 text-slate-400 uppercase text-[10px]">
-                    <tr>
-                      <th className="py-3 px-4">Resource</th>
-                      <th className="py-3 px-4">Recipient</th>
-                      <th className="py-3 px-4">Permission</th>
-                      <th className="py-3 px-4">Expires</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800">
-                    {outboundShares.map((s) => (
-                      <tr key={s.id} className="hover:bg-slate-850/50 transition-colors">
-                        <td className="py-3 px-4">
-                          <span className="font-semibold text-white block max-w-xs truncate">
-                            {s.resourceTitle || 'Untitled Item'}
-                          </span>
-                          <span className="text-[10px] text-slate-500 capitalize">{s.resourceType}</span>
-                        </td>
-                        <td className="py-3 px-4 text-slate-300">
-                          {s.recipientEmail || 'Registered User'}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-brand-300">
-                            {s.permissions === 'view' ? 'View Only' : 'Can Edit'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-slate-400">
-                          {s.expiresAt ? new Date(s.expiresAt).toLocaleDateString() : 'Indefinite'}
-                        </td>
-                        <td className="py-3 px-4">
-                          {s.isActive ? (
-                            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20">
-                              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                              <span>Active</span>
-                            </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-500">
-                              Revoked / Expired
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          {s.isActive && (
-                            <button
-                              onClick={() => handleRevokeShare(s.id)}
-                              className="px-2.5 py-1 text-[11px] font-semibold text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-600 rounded-lg transition-colors border border-rose-500/20"
-                            >
-                              Revoke Access
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              {outboundShares.map((share) => (
+                <div
+                  key={share.id}
+                  className="panel p-4 space-y-3 flex flex-col justify-between hover:border-brand-500/25 transition-all"
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="rounded bg-brand-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-brand-300 border border-brand-500/20 uppercase">
+                        {share.resourceType}
+                      </span>
+                      <span className="text-[10px] text-slate-500 tabular-nums">
+                        {share.expiresAt ? `Expires ${new Date(share.expiresAt).toLocaleDateString()}` : 'Indefinite'}
+                      </span>
+                    </div>
+                    <h4 className="text-xs font-semibold text-white truncate">{share.resourceTitle}</h4>
+                    <p className="text-[10px] text-slate-500">Recipient: {share.recipientEmail || 'Member'}</p>
+                  </div>
+
+                  <button
+                    onClick={() => handleRevokeShare(share.id)}
+                    className="btn-danger !text-xs !py-1 w-full"
+                  >
+                    <span>Revoke Access</span>
+                  </button>
+                </div>
+              ))}
             </div>
           )}
         </div>
       )}
 
-      {/* Modal: Create Family Group */}
+      {/* Create Family Modal */}
       {createFamilyOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-surface max-w-md">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
-              <h3 className="text-base font-bold text-white flex items-center space-x-2">
-                <Users className="w-4 h-4 text-brand-400" />
-                <span>Create Family Group</span>
-              </h3>
-              <button
-                onClick={() => setCreateFamilyOpen(false)}
-                className="icon-btn"
-                aria-label="Close"
-              >
+        <div className="modal-backdrop" onClick={() => setCreateFamilyOpen(false)}>
+          <div className="modal-surface max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70">
+              <h2 className="text-sm font-semibold text-white">Create Family Circle</h2>
+              <button onClick={() => setCreateFamilyOpen(false)} className="icon-btn h-8 w-8" aria-label="Close">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <form onSubmit={handleCreateFamily} className="p-6 space-y-4">
               <div>
-                <label className="field-label">
-                  Family Group Name
-                </label>
+                <label className="field-label">Family Group Name</label>
                 <input
                   type="text"
                   required
                   value={newFamilyName}
                   onChange={(e) => setNewFamilyName(e.target.value)}
-                  placeholder="e.g. The Anderson Household"
-                  className="field"
+                  placeholder="e.g. Sharma Family Vault"
+                  className="field !h-9 text-xs"
                 />
               </div>
-              <div className="flex justify-end space-x-3 pt-4 border-t border-white/[0.08]">
-                <button
-                  type="button"
-                  onClick={() => setCreateFamilyOpen(false)}
-                  className="btn-ghost"
-                >
+              <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
+                <button type="button" onClick={() => setCreateFamilyOpen(false)} className="btn-ghost !text-xs !py-1 !px-3">
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="btn-primary"
-                >
-                  {submitting ? 'Creating...' : 'Create Family'}
+                <button type="submit" disabled={submitting} className="btn-primary !text-xs !py-1.5 !px-3.5">
+                  {submitting ? 'Creating...' : 'Create Group'}
                 </button>
               </div>
             </form>
@@ -683,85 +574,45 @@ export const FamilyPage: React.FC = () => {
         </div>
       )}
 
-      {/* Modal: Invite Family Member */}
+      {/* Invite Member Modal */}
       {inviteModalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-surface max-w-md">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
-              <h3 className="text-base font-bold text-white flex items-center space-x-2">
-                <UserPlus className="w-4 h-4 text-brand-400" />
-                <span>Invite Family Member</span>
-              </h3>
-              <button
-                onClick={() => setInviteModalOpen(false)}
-                className="icon-btn"
-                aria-label="Close"
-              >
+        <div className="modal-backdrop" onClick={() => setInviteModalOpen(false)}>
+          <div className="modal-surface max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70">
+              <h2 className="text-sm font-semibold text-white">Invite to {selectedFamily?.name}</h2>
+              <button onClick={() => setInviteModalOpen(false)} className="icon-btn h-8 w-8" aria-label="Close">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <form onSubmit={handleInviteMember} className="p-6 space-y-4">
               <div>
-                <label className="field-label">
-                  Member Email Address
-                </label>
+                <label className="field-label">Member Email Address</label>
                 <input
                   type="email"
                   required
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="family.member@example.com"
-                  className="field"
+                  className="field !h-9 text-xs"
                 />
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Recipient must be a registered Ownly account holder.
-                </p>
               </div>
-
               <div>
-                <label className="field-label">
-                  Assigned Role
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setInviteRole('member')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-medium transition-all active:scale-[0.98] ${
-                      inviteRole === 'member'
-                        ? 'bg-brand-500/15 border-brand-500 text-brand-300'
-                        : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Member
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setInviteRole('admin')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-medium transition-all active:scale-[0.98] ${
-                      inviteRole === 'admin'
-                        ? 'bg-brand-500/15 border-brand-500 text-brand-300'
-                        : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Administrator
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 pt-4 border-t border-white/[0.08]">
-                <button
-                  type="button"
-                  onClick={() => setInviteModalOpen(false)}
-                  className="btn-ghost"
+                <label className="field-label">Role & Permissions</label>
+                <select
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value as FamilyRole)}
+                  className="field !h-9 text-xs"
                 >
+                  <option value="member">Member (Can view and access shared items)</option>
+                  <option value="admin">Administrator (Can invite members and manage circle)</option>
+                </select>
+              </div>
+              <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
+                <button type="button" onClick={() => setInviteModalOpen(false)} className="btn-ghost !text-xs !py-1 !px-3">
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="btn-primary"
-                >
-                  {submitting ? 'Sending...' : 'Send Invitation'}
+                <button type="submit" disabled={submitting} className="btn-primary !text-xs !py-1.5 !px-3.5">
+                  {submitting ? 'Inviting...' : 'Send Invitation'}
                 </button>
               </div>
             </form>
@@ -769,111 +620,61 @@ export const FamilyPage: React.FC = () => {
         </div>
       )}
 
-      {/* Modal: View Shared Item Details */}
+      {/* Shared Item Viewer Modal */}
       {viewingSharedItem && (
-        <div className="modal-backdrop">
-          <div className="modal-surface max-w-xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-white truncate max-w-md">
-                    {viewingSharedItem.title}
-                  </h3>
-                  <span className="text-xs text-slate-400">
-                    Shared by {viewingSharedItem.ownerEmail || 'Vault Owner'} • {viewingSharedItem.permissions === 'view' ? 'View Only' : 'Can Edit'}
-                  </span>
-                </div>
+        <div className="modal-backdrop" onClick={() => setViewingSharedItem(null)}>
+          <div className="modal-surface max-w-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70">
+              <div className="flex items-center gap-2">
+                <span className="rounded bg-brand-500/10 px-2 py-0.5 text-[10px] font-semibold text-brand-300 border border-brand-500/20">
+                  Shared Asset
+                </span>
+                <span className="text-xs text-slate-400">Granted by {viewingSharedItem.ownerEmail || 'Family Member'}</span>
               </div>
-              <button
-                onClick={() => setViewingSharedItem(null)}
-                className="icon-btn"
-                aria-label="Close"
-              >
+              <button onClick={() => setViewingSharedItem(null)} className="icon-btn h-8 w-8">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              {viewingSharedItem.description && (
-                <div>
-                  <h5 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Description
-                  </h5>
-                  <p className="text-sm text-slate-300">{viewingSharedItem.description}</p>
-                </div>
-              )}
+              <div>
+                <h3 className="text-base font-bold text-white">{viewingSharedItem.title}</h3>
+                {viewingSharedItem.description && (
+                  <p className="text-xs text-slate-400 mt-1">{viewingSharedItem.description}</p>
+                )}
+              </div>
 
               {viewingSharedItem.content && (
-                <div>
-                  <h5 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Content
-                  </h5>
-                  <div className="p-4 bg-slate-950 border border-white/[0.08] rounded-xl text-sm text-slate-200 whitespace-pre-wrap font-mono">
+                <div className="space-y-1">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Content</h4>
+                  <div className="p-3.5 bg-slate-950 rounded-xl border border-white/[0.07] text-xs font-mono text-slate-200 whitespace-pre-wrap">
                     {viewingSharedItem.content}
                   </div>
                 </div>
               )}
 
-              {viewingSharedItem.url && (
-                <div>
-                  <h5 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Bookmark URL
-                  </h5>
-                  <a
-                    href={viewingSharedItem.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm text-brand-400 hover:underline flex items-center space-x-1"
-                  >
-                    <span>{viewingSharedItem.url}</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              )}
-
-              {/* Attachments */}
               {viewingSharedItem.files && viewingSharedItem.files.length > 0 && (
-                <div>
-                  <h5 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                    Authorized Attachments ({viewingSharedItem.files.length})
-                  </h5>
-                  <div className="space-y-2">
-                    {viewingSharedItem.files.map((f) => (
+                <div className="space-y-2">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    Attached Files ({viewingSharedItem.files.length})
+                  </h4>
+                  <div className="space-y-1.5">
+                    {viewingSharedItem.files.map((file) => (
                       <div
-                        key={f.id}
-                        className="flex items-center justify-between p-3 bg-slate-950 border border-white/[0.08] rounded-xl"
+                        key={file.id}
+                        className="flex items-center justify-between p-2.5 bg-slate-950 rounded-xl border border-white/[0.07] text-xs"
                       >
-                        <div className="flex items-center space-x-2.5 truncate mr-3">
-                          <Paperclip className="w-4 h-4 text-slate-500 flex-shrink-0" />
-                          <span className="text-xs text-white truncate font-medium">
-                            {f.originalName}
-                          </span>
-                          <span className="text-[10px] text-slate-500">
-                            ({(f.sizeBytes / 1024).toFixed(1)} KB)
-                          </span>
+                        <div className="flex items-center gap-2 truncate">
+                          <Paperclip className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+                          <span className="text-white truncate">{file.originalName}</span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <a
-                            href={`/api/shares/files/${f.id}/download?preview=true`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="px-2.5 py-1 bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 text-xs rounded-lg transition-colors flex items-center space-x-1"
-                          >
-                            <Eye className="w-3 h-3" />
-                            <span>Preview</span>
-                          </a>
-                          <a
-                            href={`/api/shares/files/${f.id}/download`}
-                            download={f.originalName}
-                            className="btn-primary !py-1 !px-2.5 !text-xs flex items-center space-x-1"
-                          >
-                            <Download className="w-3 h-3" />
-                            <span>Download</span>
-                          </a>
-                        </div>
+                        <button
+                          onClick={() => vaultApi.downloadFile(file.id, file.originalName, false)}
+                          className="btn-secondary !text-xs !py-0.5 !px-2 shrink-0"
+                        >
+                          <Download className="w-3 h-3" />
+                          <span>Download</span>
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -881,12 +682,9 @@ export const FamilyPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex justify-end p-4 border-t border-white/[0.08] bg-slate-900/60">
-              <button
-                onClick={() => setViewingSharedItem(null)}
-                className="btn-ghost"
-              >
-                Close
+            <div className="p-4 border-t border-white/[0.08] bg-slate-950/70 flex justify-end">
+              <button onClick={() => setViewingSharedItem(null)} className="btn-ghost !text-xs !py-1 !px-3">
+                Done
               </button>
             </div>
           </div>

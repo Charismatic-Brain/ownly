@@ -1,12 +1,14 @@
 import React from 'react';
 import {
-  Settings,
   User,
   Shield,
   Globe,
   LogOut,
   Clock,
   Database,
+  Lock,
+  KeyRound,
+  FileCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,146 +16,138 @@ export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="mx-auto max-w-4xl space-y-7">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-          <Settings className="w-7 h-7 text-brand-400" />
-          <span>Account & Security Settings</span>
-        </h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Review your account profile, cryptographic storage parameters, and application preferences.
+        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">System & Security Settings</h1>
+        <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+          Cryptographic security parameters, account identity, and sovereign vault storage.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Profile Card */}
-        <div className="md:col-span-2 panel rounded-2xl p-6 space-y-5">
-          <h2 className="text-base font-bold text-white flex items-center space-x-2 border-b border-white/[0.08] pb-3">
-            <User className="w-4 h-4 text-brand-400" />
-            <span>Profile Information</span>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="space-y-6">
+        {/* Section 1: Profile & Identity */}
+        <div className="panel p-5 space-y-4">
+          <div className="flex items-center gap-3 border-b border-white/[0.07] pb-3.5">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-500/10 text-brand-300 border border-brand-500/20 text-sm font-bold">
+              {user?.displayName ? user.displayName.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
+            </div>
             <div>
-              <label className="field-label">Display Name</label>
-              <div className="px-3.5 py-2.5 bg-slate-950 border border-white/[0.08] rounded-xl text-sm font-semibold text-white">
-                {user?.displayName || 'User'}
-              </div>
+              <h2 className="text-sm font-semibold text-white">{user?.displayName || 'Vault Owner'}</h2>
+              <p className="text-xs text-slate-400">{user?.email || 'owner@sovereign.vault'}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3 space-y-1">
+              <span className="source-list-header !p-0">Display Name</span>
+              <p className="text-slate-200 font-medium">{user?.displayName || 'Owner'}</p>
             </div>
 
-            <div>
-              <label className="field-label">Email Address</label>
-              <div className="px-3.5 py-2.5 bg-slate-950 border border-white/[0.08] rounded-xl text-sm text-slate-300 truncate">
-                {user?.email || 'user@example.test'}
-              </div>
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3 space-y-1">
+              <span className="source-list-header !p-0">Email Address</span>
+              <p className="text-slate-200 font-medium truncate">{user?.email || 'owner@sovereign.vault'}</p>
             </div>
 
-            <div>
-              <label className="field-label">Timezone</label>
-              <div className="flex items-center space-x-2 px-3.5 py-2.5 bg-slate-950 border border-white/[0.08] rounded-xl text-sm text-slate-300">
-                <Globe className="w-4 h-4 text-slate-500" />
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3 space-y-1">
+              <span className="source-list-header !p-0">Timezone</span>
+              <div className="flex items-center gap-1.5 text-slate-200 font-medium">
+                <Globe className="h-3.5 w-3.5 text-slate-500" />
                 <span>{user?.settings?.timezone || 'Asia/Kolkata (UTC+05:30)'}</span>
               </div>
             </div>
 
-            <div>
-              <label className="field-label">Account Created</label>
-              <div className="flex items-center space-x-2 px-3.5 py-2.5 bg-slate-950 border border-white/[0.08] rounded-xl text-sm text-slate-300">
-                <Clock className="w-4 h-4 text-slate-500" />
-                <span>
-                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Active'}
-                </span>
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3 space-y-1">
+              <span className="source-list-header !p-0">Vault Established</span>
+              <div className="flex items-center gap-1.5 text-slate-200 font-medium tabular-nums">
+                <Clock className="h-3.5 w-3.5 text-slate-500" />
+                <span>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Active Session'}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Security Parameters Badge */}
-        <div className="panel rounded-2xl p-6 space-y-4">
-          <h2 className="text-base font-bold text-white flex items-center space-x-2 border-b border-white/[0.08] pb-3">
-            <Shield className="w-4 h-4 text-teal-400" />
-            <span>Cryptographic Spec</span>
-          </h2>
-
-          <div className="space-y-3 text-xs">
-            <div className="p-3 bg-slate-950 border border-white/[0.08] rounded-xl space-y-1">
-              <span className="text-[10px] uppercase font-bold text-brand-400 tracking-wider block">
-                Password Hashing
-              </span>
-              <p className="text-slate-300 font-mono">Argon2id (RFC 9106)</p>
-              <span className="text-[11px] text-slate-500 block">Salted memory-hard hashing</span>
+        {/* Section 2: Cryptographic Security Enclave */}
+        <div className="panel p-5 space-y-4">
+          <div className="flex items-center justify-between border-b border-white/[0.07] pb-3.5">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-brand-400" />
+              <h2 className="text-sm font-semibold text-white">Cryptographic Security Specification</h2>
             </div>
-
-            <div className="p-3 bg-slate-950 border border-white/[0.08] rounded-xl space-y-1">
-              <span className="text-[10px] uppercase font-bold text-teal-400 tracking-wider block">
-                Binary Storage
-              </span>
-              <p className="text-slate-300 font-mono">AES-256-GCM at rest (GridFS)</p>
-              <span className="text-[11px] text-slate-500 block">Per-file keys, server-held master key</span>
-            </div>
-
-            <div className="p-3 bg-slate-950 border border-white/[0.08] rounded-xl space-y-1">
-              <span className="text-[10px] uppercase font-bold text-purple-400 tracking-wider block">
-                Session Tokens
-              </span>
-              <p className="text-slate-300 font-mono">httpOnly cookie + JWT (HS256)</p>
-              <span className="text-[11px] text-slate-500 block">Revocable on logout, CSRF-protected</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Demo Credentials Card */}
-      <div className="panel rounded-2xl p-6 space-y-4">
-        <div className="flex items-center space-x-2.5 text-brand-400">
-          <Database className="w-5 h-5" />
-          <h2 className="text-base font-bold text-white">Synthetic Demo Environment</h2>
-        </div>
-        <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
-          Ownly includes a comprehensive synthetic seed script populated with realistic demo users,
-          multi-tier collections, GridFS documents, family groups, and cross-account item shares.
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-          <div className="p-3.5 bg-slate-950 border border-white/[0.08] rounded-xl">
-            <span className="text-[11px] font-bold text-brand-400 block mb-1">
-              Primary Account (Family Admin)
+            <span className="rounded bg-brand-500/10 px-2 py-0.5 text-[10px] font-semibold text-brand-300 border border-brand-500/20">
+              Verified Architecture
             </span>
-            <p className="font-mono text-slate-300">Email: demo@ownly.dev</p>
-            <p className="font-mono text-slate-400">Password: DemoPassword123!</p>
           </div>
 
-          <div className="p-3.5 bg-slate-950 border border-white/[0.08] rounded-xl">
-            <span className="text-[11px] font-bold text-teal-400 block mb-1">
-              Partner Account (Family Member)
-            </span>
-            <p className="font-mono text-slate-300">Email: partner@ownly.dev</p>
-            <p className="font-mono text-slate-400">Password: DemoPassword123!</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3.5 space-y-1.5">
+              <div className="flex items-center gap-1.5 text-brand-300 text-[11px] font-semibold">
+                <KeyRound className="h-3.5 w-3.5" />
+                <span>Password Hashing</span>
+              </div>
+              <p className="font-mono text-slate-200 text-xs">Argon2id</p>
+              <p className="text-[10px] text-slate-500">RFC 9106 salted memory-hard hashing with timing attack prevention.</p>
+            </div>
+
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3.5 space-y-1.5">
+              <div className="flex items-center gap-1.5 text-teal-300 text-[11px] font-semibold">
+                <Lock className="h-3.5 w-3.5" />
+                <span>Binary Storage</span>
+              </div>
+              <p className="font-mono text-slate-200 text-xs">AES-256-GCM GridFS</p>
+              <p className="text-[10px] text-slate-500">Authenticated payload encryption at rest with unique per-file initialization vectors.</p>
+            </div>
+
+            <div className="rounded-xl bg-slate-950/70 border border-white/[0.06] p-3.5 space-y-1.5">
+              <div className="flex items-center gap-1.5 text-purple-300 text-[11px] font-semibold">
+                <FileCheck className="h-3.5 w-3.5" />
+                <span>Session Tokens</span>
+              </div>
+              <p className="font-mono text-slate-200 text-xs">httpOnly Cookie + JWT</p>
+              <p className="text-[10px] text-slate-500">Protected against cross-site scripting (XSS) with instant revocation on logout.</p>
+            </div>
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-500 font-mono">
-          To reset synthetic data: <code>python backend/scripts/seed_demo_data.py</code>
-        </div>
-      </div>
-
-      {/* Danger Zone */}
-      <div className="panel border-rose-500/20 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-sm font-bold text-white">Sign Out</h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Terminate your session: it is revoked on the server and the session cookie is cleared from this browser.
+        {/* Section 3: Demo Environment & Storage */}
+        <div className="panel p-5 space-y-3.5">
+          <div className="flex items-center gap-2 border-b border-white/[0.07] pb-3.5 text-brand-400">
+            <Database className="h-4 w-4" />
+            <h2 className="text-sm font-semibold text-white">Sovereign Data Storage & Demo Seed</h2>
+          </div>
+          <p className="text-xs text-slate-400 leading-relaxed max-w-2xl">
+            Ownly stores encrypted artifacts inside dedicated MongoDB GridFS chunks. Synthetic seed data provides realistic verification of multi-tier collections, family groups, and encrypted attachments.
           </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="p-3 bg-slate-950/70 border border-white/[0.06] rounded-xl space-y-1">
+              <span className="text-[10px] font-semibold text-brand-300 uppercase tracking-wider block">Demo Account 1</span>
+              <p className="text-slate-200 font-mono text-[11px]">shubham@ownly.dev</p>
+              <p className="text-[10px] text-slate-500">Seed user with seeded files, finance records & family circles</p>
+            </div>
+
+            <div className="p-3 bg-slate-950/70 border border-white/[0.06] rounded-xl space-y-1">
+              <span className="text-[10px] font-semibold text-teal-300 uppercase tracking-wider block">Demo Account 2</span>
+              <p className="text-slate-200 font-mono text-[11px]">family.member@ownly.dev</p>
+              <p className="text-[10px] text-slate-500">Secondary user testing cross-account vault permissions</p>
+            </div>
+          </div>
         </div>
 
-        <button
-          onClick={logout}
-          className="btn-danger self-start sm:self-auto"
-        >
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out of Ownly</span>
-        </button>
+        {/* Section 4: Account Actions */}
+        <div className="panel p-5 flex items-center justify-between border-rose-500/20 bg-rose-950/10">
+          <div>
+            <h3 className="text-xs font-semibold text-white">Sign Out of Sovereign Vault</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">Clears the secure httpOnly session cookie and locks local decryption keys.</p>
+          </div>
+          <button
+            onClick={logout}
+            className="btn-danger !text-xs !py-1.5 !px-3"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
     </div>
   );

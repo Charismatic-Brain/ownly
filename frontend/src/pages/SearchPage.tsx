@@ -6,12 +6,21 @@ import {
   X,
   Star,
   Clock,
-  ArrowUpDown
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import { ItemDetailModal } from '../components/ItemDetailModal';
-import { ItemCard } from '../components/ItemCard';
+import { ItemCard, ItemRow, pluralize } from '../components/ItemCard';
 import type { Item, Collection } from '../types';
+
+const KIND_FILTERS = [
+  { label: 'All', value: '' },
+  { label: 'Files', value: 'file' },
+  { label: 'Notes', value: 'note' },
+  { label: 'Links', value: 'link' },
+  { label: 'Records', value: 'record' },
+];
 
 export const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +35,7 @@ export const SearchPage: React.FC = () => {
   const [expiringSoon, setExpiringSoon] = useState<boolean>(searchParams.get('expiringSoon') === 'true');
   const [sortBy, setSortBy] = useState<string>('updatedAt');
   const [sortOrder, setSortOrder] = useState<string>('desc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const [viewingItem, setViewingItem] = useState<Item | null>(null);
 
@@ -42,7 +52,7 @@ export const SearchPage: React.FC = () => {
       setSearchParams(params);
     }, 250);
     return () => clearTimeout(handler);
-  }, [query, kind, collectionId, onlyFavorites, expiringSoon]);
+  }, [query, kind, collectionId, onlyFavorites, expiringSoon, setSearchParams]);
 
   // Fetch collections for dropdown
   const { data: collections = [] } = useQuery<Collection[]>({
@@ -78,6 +88,12 @@ export const SearchPage: React.FC = () => {
   const items = searchResults?.items || [];
   const total = searchResults?.total || 0;
 
+  const collectionMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    collections.forEach((c) => map.set(c.id, c.name));
+    return map;
+  }, [collections]);
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: vaultApi.toggleFavorite,
     onSuccess: (updated) => {
@@ -99,71 +115,63 @@ export const SearchPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl space-y-7">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-          <Search className="w-6 h-6 text-brand-400" />
-          <span>Universal Search</span>
-        </h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Search and filter across authorized documents, notes, bookmarks, custom fields, and tags.
+        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Spotlight Search</h1>
+        <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+          Full-text cryptographic search across encrypted titles, metadata, tags, and collections.
         </p>
       </div>
 
-      {/* Search Input Bar */}
-      <div className="panel rounded-2xl p-4 space-y-4 shadow-xl shadow-black/20">
+      {/* Main Spotlight Input & Controls Bar */}
+      <div className="panel p-4 space-y-3.5">
         <div className="relative">
-          <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type anything (e.g. 'passport', 'insurance', 'wifi', tags, URLs)..."
-            className="field pl-12 pr-10 !py-3 !text-sm"
+            placeholder="Search vault items, documents, credentials..."
+            aria-label="Search query"
+            className="field !h-11 pl-10 pr-10 text-sm font-medium"
+            autoFocus
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="icon-btn absolute right-2.5 top-1/2 -translate-y-1/2 h-7 w-7"
-              aria-label="Clear search"
+              className="icon-btn absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2"
+              aria-label="Clear query"
             >
-              <X className="w-4 h-4" />
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>
 
-        {/* Filter Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.08]">
+        {/* Filters Row */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          {/* Kind Segmented Control */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* Kind Tabs */}
-            <div className="flex items-center space-x-1 bg-slate-950/60 p-1 rounded-xl border border-white/[0.08]">
-              {[
-                { label: 'All', value: '' },
-                { label: 'Files', value: 'file' },
-                { label: 'Notes', value: 'note' },
-                { label: 'Links', value: 'link' },
-                { label: 'Records', value: 'record' },
-              ].map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => setKind(tab.value)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-[0.97] ${
-                    kind === tab.value
-                      ? 'bg-brand-500 text-slate-950 font-semibold shadow-sm'
-                      : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div className="segmented-track">
+              {KIND_FILTERS.map((tab) => {
+                const active = kind === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    onClick={() => setKind(tab.value)}
+                    className={`segmented-item ${active ? 'segmented-item-active' : ''}`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Collection Dropdown */}
+            {/* Collection Select */}
             <select
               value={collectionId}
               onChange={(e) => setCollectionId(e.target.value)}
-              className="field !w-auto !py-1.5 !text-xs"
+              className="field !h-8 !py-0 !w-auto text-xs bg-slate-950/80 cursor-pointer"
             >
               <option value="">All Collections</option>
               {collections.map((c) => (
@@ -173,99 +181,98 @@ export const SearchPage: React.FC = () => {
               ))}
             </select>
 
-            {/* Favorites Toggle */}
+            {/* Sort Select */}
+            <select
+              value={`${sortBy}-${sortOrder}`}
+              onChange={(e) => {
+                const [sb, so] = e.target.value.split('-');
+                setSortBy(sb);
+                setSortOrder(so);
+              }}
+              className="field !h-8 !py-0 !w-auto text-xs bg-slate-950/80 cursor-pointer"
+            >
+              <option value="updatedAt-desc">Recently Updated</option>
+              <option value="createdAt-desc">Newest First</option>
+              <option value="title-asc">Title (A-Z)</option>
+            </select>
+
+            {/* Favorite & Expiring Toggles */}
             <button
               onClick={() => setOnlyFavorites(!onlyFavorites)}
-              className={`px-3 py-1.5 rounded-xl border text-xs flex items-center space-x-1.5 transition-all active:scale-[0.98] ${
+              className={`grid h-8 w-8 place-items-center rounded-xl border transition-colors ${
                 onlyFavorites
-                  ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
-                  : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
+                  ? 'border-amber-400/40 bg-amber-400/10 text-amber-300'
+                  : 'border-white/[0.08] bg-slate-950/70 text-slate-400 hover:text-slate-200'
               }`}
+              title="Show Favorites Only"
             >
-              <Star className={`w-3.5 h-3.5 ${onlyFavorites ? 'fill-amber-400' : ''}`} />
-              <span>Favorites Only</span>
+              <Star className={`h-3.5 w-3.5 ${onlyFavorites ? 'fill-amber-300' : ''}`} />
             </button>
 
-            {/* Expiring Soon Toggle */}
             <button
               onClick={() => setExpiringSoon(!expiringSoon)}
-              className={`px-3 py-1.5 rounded-xl border text-xs flex items-center space-x-1.5 transition-all active:scale-[0.98] ${
+              className={`grid h-8 w-8 place-items-center rounded-xl border transition-colors ${
                 expiringSoon
-                  ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
-                  : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-white'
+                  ? 'border-rose-400/40 bg-rose-400/10 text-rose-300'
+                  : 'border-white/[0.08] bg-slate-950/70 text-slate-400 hover:text-slate-200'
               }`}
+              title="Expiring Soon"
             >
-              <Clock className="w-3.5 h-3.5" />
-              <span>Expiring Soon (30d)</span>
+              <Clock className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          {/* Sorting */}
-          <div className="flex items-center space-x-2">
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="field !w-auto !py-1.5 !text-xs"
-            >
-              <option value="updatedAt">Recently Updated</option>
-              <option value="createdAt">Date Created</option>
-              <option value="title">Title (Alphabetical)</option>
-              <option value="expiresAt">Expiration Date</option>
-            </select>
+          {/* View Mode Switcher */}
+          <div className="segmented-track">
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="btn-ghost !px-2.5 !py-1.5 !text-xs uppercase"
-              title="Toggle sort direction"
+              onClick={() => setViewMode('grid')}
+              className={`segmented-item ${viewMode === 'grid' ? 'segmented-item-active' : ''}`}
+              title="Icons Grid View"
             >
-              {sortOrder.toUpperCase()}
+              <LayoutGrid className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`segmented-item ${viewMode === 'list' ? 'segmented-item-active' : ''}`}
+              title="Details List View"
+            >
+              <List className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Results Header */}
-      <div className="flex items-center justify-between px-1 text-xs text-slate-400">
-        <div>
-          {isLoading ? (
-            <span>Searching...</span>
-          ) : (
-            <span>
-              Found <strong className="text-white">{total}</strong> {total === 1 ? 'item' : 'items'}
-              {debouncedQuery && (
-                <>
-                  {' '}
-                  matching "<span className="text-brand-400">{debouncedQuery}</span>"
-                </>
-              )}
-            </span>
-          )}
-        </div>
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          {isLoading ? 'Searching...' : `Found ${pluralize(total, 'result')}`}
+        </span>
       </div>
 
-      {/* Loading State */}
+      {/* Loading Skeleton */}
       {isLoading && (
-        <div className="p-16 text-center text-slate-400 space-y-3">
-          <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs">Searching authorized vault records...</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-44 animate-pulse rounded-2xl border border-white/[0.05] bg-slate-900" />
+          ))}
         </div>
       )}
 
       {/* Empty State */}
       {!isLoading && items.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-brand-400">
-            <Search className="w-6 h-6" />
+        <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center flex flex-col items-center justify-center space-y-2.5">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800 text-brand-400 border border-white/10">
+            <Search className="h-5 w-5" />
           </div>
-          <h4 className="text-base font-semibold text-white">No matching items found</h4>
+          <h4 className="text-sm font-semibold text-white">No items match your search</h4>
           <p className="text-xs text-slate-400 max-w-sm">
-            Try adjusting your search keyword or clearing filters to locate what you are looking for.
+            Try adjusting keywords or clearing category filters.
           </p>
         </div>
       )}
 
-      {/* Results Grid */}
-      {!isLoading && items.length > 0 && (
+      {/* Results Display */}
+      {!isLoading && items.length > 0 && viewMode === 'grid' && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => (
             <ItemCard
@@ -278,7 +285,37 @@ export const SearchPage: React.FC = () => {
         </div>
       )}
 
-      {/* Item Detail Modal */}
+      {!isLoading && items.length > 0 && viewMode === 'list' && (
+        <div className="panel overflow-hidden border border-white/[0.07]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/[0.07] bg-slate-950/60 text-[11px] font-semibold tracking-wider text-slate-400 uppercase select-none">
+                  <th className="py-2.5 pl-4 pr-3">Name</th>
+                  <th className="px-3 py-2.5">Kind</th>
+                  <th className="px-3 py-2.5">Collection</th>
+                  <th className="px-3 py-2.5">Modified</th>
+                  <th className="px-3 py-2.5">Security / Size</th>
+                  <th className="py-2.5 pl-3 pr-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <ItemRow
+                    key={item.id}
+                    item={item}
+                    collectionName={item.collectionId ? collectionMap.get(item.collectionId) : undefined}
+                    onOpen={setViewingItem}
+                    onToggleFavorite={(id) => toggleFavoriteMutation.mutate(id)}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* QuickLook Inspection Sheet */}
       <ItemDetailModal
         item={viewingItem}
         collections={collections}
@@ -299,4 +336,3 @@ export const SearchPage: React.FC = () => {
     </div>
   );
 };
-

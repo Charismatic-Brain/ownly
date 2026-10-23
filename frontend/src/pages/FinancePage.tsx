@@ -5,13 +5,14 @@ import {
   Plus,
   ArrowDownLeft,
   ArrowUpRight,
-  PiggyBank,
   Calendar,
   CheckCircle2,
   Trash2,
   CreditCard,
   X,
-  AlertCircle
+  AlertCircle,
+  Receipt,
+  Repeat,
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import type {
@@ -77,123 +78,131 @@ export const FinancePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <Wallet className="w-6 h-6 text-brand-400" />
-            <span>Finance & Bills</span>
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Track manual income, expenses, and recurring bills with exact integer minor-unit math.
+    <div className="mx-auto max-w-7xl space-y-7">
+      {/* Page Header (Apple Wallet Archetype) */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Finance & Ledger</h1>
+          <p className="mt-1 max-w-xl text-xs text-slate-400 sm:text-sm">
+            Sovereign ledger with exact integer minor-unit math and recurring subscriptions.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2.5">
+        {/* 1 Prominent Action Budget */}
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={() => setIsBillModalOpen(true)}
-            className="btn-secondary"
+            className="btn-secondary !text-xs !py-1.5 !px-3"
           >
-            <Calendar className="w-4 h-4" />
-            <span>Add Bill</span>
+            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+            Add Bill
           </button>
           <button
             onClick={() => setIsTxnModalOpen(true)}
-            className="btn-primary"
+            className="btn-primary !text-xs !py-1.5 !px-3.5"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Transaction</span>
+            <Plus className="h-3.5 w-3.5" />
+            Add Transaction
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {/* Total Income */}
-        <div className="p-4 rounded-2xl panel">
-          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase tracking-wider">
-            <span>Total Income</span>
-            <ArrowDownLeft className="w-4 h-4" />
+      {/* Apple Wallet Pass Card: Net Balance & Core Flow Metrics */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-b from-slate-900 to-slate-950 p-6 shadow-modal">
+        <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold uppercase tracking-wider text-slate-400">Total Net Balance</span>
+            <span className="rounded bg-brand-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-brand-300 border border-brand-500/20">
+              INR · ₹
+            </span>
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
-            {summaryLoading ? '...' : formatCurrency(summary?.totalIncome || 0)}
-          </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Recorded cash inflows</p>
+          <Wallet className="h-4 w-4 text-brand-400" />
         </div>
 
-        {/* Total Expenses */}
-        <div className="p-4 rounded-2xl panel">
-          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase tracking-wider">
-            <span>Total Expenses</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
-            {summaryLoading ? '...' : formatCurrency(summary?.totalExpense || 0)}
-          </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Recorded outflows</p>
-        </div>
-
-        {/* Net Savings */}
-        <div className="p-4 rounded-2xl panel">
-          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase tracking-wider">
-            <span>Net Savings</span>
-            <PiggyBank className="w-4 h-4" />
-          </div>
-          <p
-            className={`text-2xl font-bold mt-2 tracking-tight ${
-              (summary?.netSavings || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'
-            }`}
-          >
+        {/* Main Big Currency Figure */}
+        <div className="mt-3">
+          <p className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-mono tabular-nums">
             {summaryLoading ? '...' : formatCurrency(summary?.netSavings || 0)}
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Income minus expenses</p>
+          <p className="mt-1 text-xs text-slate-500">Cumulative balance across all recorded flows</p>
         </div>
 
-        {/* Upcoming Active Bills */}
-        <div className="p-4 rounded-2xl panel">
-          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider">
-            <span>Upcoming Bills</span>
-            <CreditCard className="w-4 h-4" />
+        {/* Three High-Contrast Apple Ledger Metrics */}
+        <div className="mt-6 grid grid-cols-1 divide-y divide-white/[0.06] border-t border-white/[0.07] pt-4 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:gap-4 sm:pt-4">
+          {/* Inflow */}
+          <div className="flex items-center justify-between pb-3 sm:pb-0 sm:pr-4">
+            <div>
+              <span className="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                Total Inflow
+              </span>
+              <span className="mt-0.5 block text-lg font-semibold text-emerald-400 font-mono tabular-nums">
+                {summaryLoading ? '...' : `+${formatCurrency(summary?.totalIncome || 0)}`}
+              </span>
+            </div>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <ArrowDownLeft className="h-4 w-4" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">
-            {summaryLoading ? '...' : formatCurrency(summary?.upcomingBillsTotal || 0)}
-          </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">
-            {summary?.activeBillsCount || 0} active recurring bills
-          </p>
+
+          {/* Outflow */}
+          <div className="flex items-center justify-between py-3 sm:py-0 sm:px-4">
+            <div>
+              <span className="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                Total Outflow
+              </span>
+              <span className="mt-0.5 block text-lg font-semibold text-rose-400 font-mono tabular-nums">
+                {summaryLoading ? '...' : `-${formatCurrency(summary?.totalExpense || 0)}`}
+              </span>
+            </div>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <ArrowUpRight className="h-4 w-4" />
+            </div>
+          </div>
+
+          {/* Active Recurring Load */}
+          <div className="flex items-center justify-between pt-3 sm:pt-0 sm:pl-4">
+            <div>
+              <span className="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                Active Bills Load
+              </span>
+              <span className="mt-0.5 block text-lg font-semibold text-amber-300 font-mono tabular-nums">
+                {summaryLoading ? '...' : formatCurrency(summary?.upcomingBillsTotal || 0)}
+              </span>
+            </div>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <CreditCard className="h-4 w-4" />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Category Breakdown Progress Bars */}
+      {/* Category Breakdown (Apple Card Style Spectrum) */}
       {summary && summary.categoryBreakdown.length > 0 && (
-        <div className="p-5 rounded-2xl panel space-y-3">
+        <div className="panel p-5 space-y-3.5">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Spending Breakdown by Category
-            </h3>
-            <span className="text-xs text-slate-500">
-              {summary.categoryBreakdown.length} active categories
+            <h3 className="source-list-header !p-0">Spending by Category</h3>
+            <span className="text-xs text-slate-500 tabular-nums">
+              {summary.categoryBreakdown.length} Categories
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {summary.categoryBreakdown.map((cat) => (
-              <div key={cat.category} className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.07] space-y-1.5">
+              <div key={cat.category} className="rounded-xl bg-slate-950/60 border border-white/[0.06] p-3 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-200">{cat.category}</span>
-                  <span className="font-bold text-white">{formatCurrency(cat.totalAmount)}</span>
+                  <span className="font-medium text-slate-200 truncate pr-2">{cat.category}</span>
+                  <span className="font-semibold text-white font-mono tabular-nums">{formatCurrency(cat.totalAmount)}</span>
                 </div>
-                {/* Progress bar */}
+                {/* Thin progress track */}
                 <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
                   <div
                     className="bg-brand-500 h-full rounded-full transition-all"
                     style={{ width: `${Math.min(cat.percentage, 100)}%` }}
                   />
                 </div>
-                <div className="flex items-center justify-between text-[10px] text-slate-500">
-                  <span>{cat.count} transactions</span>
-                  <span>{cat.percentage}% of expenses</span>
+                <div className="flex items-center justify-between text-[10px] text-slate-500 tabular-nums">
+                  <span>{cat.count} txns</span>
+                  <span>{cat.percentage}% of total</span>
                 </div>
               </div>
             ))}
@@ -201,33 +210,25 @@ export const FinancePage: React.FC = () => {
         </div>
       )}
 
-      {/* View Tabs */}
-      <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-        <div className="flex items-center space-x-2">
+      {/* View Switcher: Segmented Control (Apple HIG: segmented-controls.md) */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/[0.07] pb-3">
+        <div className="segmented-track">
           <button
             onClick={() => setActiveTab('transactions')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
-              activeTab === 'transactions'
-                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-            }`}
+            className={`segmented-item ${activeTab === 'transactions' ? 'segmented-item-active' : ''}`}
           >
             Transactions ({transactions.length})
           </button>
           <button
             onClick={() => setActiveTab('bills')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
-              activeTab === 'bills'
-                ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-            }`}
+            className={`segmented-item ${activeTab === 'bills' ? 'segmented-item-active' : ''}`}
           >
             Bills & Subscriptions ({bills.length})
           </button>
         </div>
 
         {activeTab === 'transactions' && (
-          <div className="flex items-center space-x-1 bg-slate-950/60 p-1 rounded-xl border border-white/[0.08]">
+          <div className="segmented-track">
             {[
               { label: 'All', val: '' },
               { label: 'Expenses', val: 'expense' },
@@ -236,11 +237,7 @@ export const FinancePage: React.FC = () => {
               <button
                 key={t.label}
                 onClick={() => setTypeFilter(t.val)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all active:scale-[0.97] ${
-                  typeFilter === t.val
-                    ? 'bg-brand-500 text-slate-950 font-semibold'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                className={`segmented-item ${typeFilter === t.val ? 'segmented-item-active' : ''}`}
               >
                 {t.label}
               </button>
@@ -249,28 +246,28 @@ export const FinancePage: React.FC = () => {
         )}
       </div>
 
-      {/* Transactions List */}
+      {/* Transactions Ledger */}
       {activeTab === 'transactions' && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {txnsLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
-              <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs">Loading transactions...</p>
+            <div className="p-14 text-center text-slate-400 space-y-2.5">
+              <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs">Loading ledger...</p>
             </div>
           )}
 
           {!txnsLoading && transactions.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Wallet className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center flex flex-col items-center justify-center space-y-2.5">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800 text-brand-400 border border-white/10">
+                <Receipt className="h-5 w-5" />
               </div>
-              <h4 className="text-base font-semibold text-white">No transactions found</h4>
+              <h4 className="text-sm font-semibold text-white">No transactions recorded</h4>
               <p className="text-xs text-slate-400 max-w-sm">
                 Log income or expenses to track your spending trends and budget summaries.
               </p>
               <button
                 onClick={() => setIsTxnModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="btn-primary mt-2 !text-xs !py-1.5 !px-3.5"
               >
                 + Add Transaction
               </button>
@@ -283,49 +280,50 @@ export const FinancePage: React.FC = () => {
               return (
                 <div
                   key={txn.id}
-                  className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-4 hover:border-slate-750 transition-colors"
+                  className="group panel p-3.5 flex items-center justify-between gap-4 hover:border-brand-500/25 transition-all"
                 >
-                  <div className="flex items-center space-x-3 truncate">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl ${
                         isIncome
                           ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                           : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                       }`}
                     >
-                      {isIncome ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+                      {isIncome ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                     </div>
-                    <div className="truncate">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-semibold text-white truncate">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-white truncate">
                           {txn.category}
                         </span>
                         {txn.description && (
-                          <span className="text-xs text-slate-400 truncate">
-                            • {txn.description}
+                          <span className="text-xs text-slate-400 truncate hidden sm:inline">
+                            · {txn.description}
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] text-slate-500">
+                      <span className="text-[10px] text-slate-500 tabular-nums">
                         {new Date(txn.occurredAt).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-3 flex-shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     <span
-                      className={`text-sm font-bold ${
-                        isIncome ? 'text-emerald-400' : 'text-slate-200'
+                      className={`text-xs font-semibold font-mono tabular-nums ${
+                        isIncome ? 'text-emerald-400' : 'text-slate-100'
                       }`}
                     >
                       {isIncome ? '+' : '-'}{formatCurrency(txn.amount)}
                     </span>
                     <button
                       onClick={() => deleteTxnMutation.mutate(txn.id)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                      title="Delete transaction"
+                      className="icon-btn h-7 w-7 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-rose-400 transition-opacity"
+                      title="Delete entry"
+                      aria-label="Delete entry"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -334,28 +332,28 @@ export const FinancePage: React.FC = () => {
         </div>
       )}
 
-      {/* Bills List */}
+      {/* Recurring Bills List */}
       {activeTab === 'bills' && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {billsLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
-              <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs">Loading bills...</p>
+            <div className="p-14 text-center text-slate-400 space-y-2.5">
+              <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs">Loading subscriptions...</p>
             </div>
           )}
 
           {!billsLoading && bills.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <CreditCard className="w-6 h-6 text-amber-400" />
+            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center flex flex-col items-center justify-center space-y-2.5">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800 text-amber-300 border border-white/10">
+                <Repeat className="h-5 w-5" />
               </div>
-              <h4 className="text-base font-semibold text-white">No recurring bills set up</h4>
+              <h4 className="text-sm font-semibold text-white">No recurring bills set up</h4>
               <p className="text-xs text-slate-400 max-w-sm">
                 Add subscriptions, rent, or utilities to receive upcoming due date alerts.
               </p>
               <button
                 onClick={() => setIsBillModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="btn-primary mt-2 !text-xs !py-1.5 !px-3.5"
               >
                 + Add Recurring Bill
               </button>
@@ -366,40 +364,44 @@ export const FinancePage: React.FC = () => {
             bills.map((bill) => (
               <div
                 key={bill.id}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="group panel p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-brand-500/25 transition-all"
               >
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-semibold text-white">{bill.name}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-brand-500/10 text-brand-400">
+                <div className="min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-white">{bill.name}</span>
+                    <span className="rounded bg-brand-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-brand-300 border border-brand-500/20 uppercase">
                       {bill.frequency}
                     </span>
-                    <span className="text-xs text-slate-400">• {bill.category}</span>
+                    <span className="text-xs text-slate-400">· {bill.category}</span>
                   </div>
-                  <div className="flex items-center space-x-3 text-[11px] text-slate-500">
+                  <div className="flex items-center gap-3 text-[10px] text-slate-500 tabular-nums">
                     <span>Next Due: {new Date(bill.nextDueAt).toLocaleDateString()}</span>
                     {bill.autopay && <span className="text-emerald-400 font-medium">Autopay Active</span>}
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3 flex-shrink-0">
-                  <span className="text-base font-bold text-white">
+                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                  <span className="text-xs font-bold text-white font-mono tabular-nums">
                     {formatCurrency(bill.amount)}
                   </span>
-                  <button
-                    onClick={() => payBillMutation.mutate(bill.id)}
-                    disabled={payBillMutation.isPending}
-                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-colors disabled:opacity-50"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Mark Paid</span>
-                  </button>
-                  <button
-                    onClick={() => deleteBillMutation.mutate(bill.id)}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => payBillMutation.mutate(bill.id)}
+                      disabled={payBillMutation.isPending}
+                      className="btn-secondary !text-xs !py-1 !px-2.5 text-emerald-400 hover:text-emerald-300"
+                    >
+                      <CheckCircle2 className="h-3 w-3" />
+                      <span>Mark Paid</span>
+                    </button>
+                    <button
+                      onClick={() => deleteBillMutation.mutate(bill.id)}
+                      className="icon-btn h-7 w-7 hover:text-rose-400"
+                      title="Delete bill"
+                      aria-label="Delete bill"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -432,7 +434,6 @@ export const FinancePage: React.FC = () => {
     </div>
   );
 };
-
 
 // ------------------------------------------------------------------
 // Internal Modal: Add Transaction
@@ -475,24 +476,24 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-surface max-w-md">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
-          <h2 className="text-base font-semibold text-white">Add Transaction</h2>
-          <button onClick={onClose} className="icon-btn" aria-label="Close">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-surface max-w-md" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70">
+          <h2 className="text-sm font-semibold text-white">Add Transaction</h2>
+          <button onClick={onClose} className="icon-btn h-8 w-8" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Type Selector */}
+          {/* Type Segmented Control */}
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -518,7 +519,6 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
             </button>
           </div>
 
-          {/* Amount */}
           <div>
             <label className="field-label">Amount (INR)</label>
             <input
@@ -528,11 +528,10 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="field"
+              className="field !h-9 text-xs"
             />
           </div>
 
-          {/* Category */}
           <div>
             <label className="field-label">Category</label>
             <input
@@ -540,47 +539,37 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. Groceries, Rent, Salary, Travel, Utilities"
-              className="field"
+              placeholder="e.g. Groceries, Rent, Salary, Utilities"
+              className="field !h-9 text-xs"
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="field-label">Description</label>
+            <label className="field-label">Description (Optional)</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional notes or merchant name"
-              className="field"
+              placeholder="Merchant or note"
+              className="field !h-9 text-xs"
             />
           </div>
 
-          {/* Occurred At */}
           <div>
             <label className="field-label">Date (Optional)</label>
             <input
               type="date"
               value={occurredAt}
               onChange={(e) => setOccurredAt(e.target.value)}
-              className="field"
+              className="field !h-9 text-xs"
             />
           </div>
 
-          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn-ghost"
-            >
+          <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
+            <button type="button" onClick={onClose} className="btn-ghost !text-xs !py-1 !px-3">
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={mutation.isPending}
-              className="btn-primary"
-            >
+            <button type="submit" disabled={mutation.isPending} className="btn-primary !text-xs !py-1.5 !px-3.5">
               {mutation.isPending ? 'Saving...' : 'Save Transaction'}
             </button>
           </div>
@@ -590,7 +579,6 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   );
 };
 
-
 // ------------------------------------------------------------------
 // Internal Modal: Add Bill
 // ------------------------------------------------------------------
@@ -599,25 +587,25 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Utilities');
   const [frequency, setFrequency] = useState<BillFrequency>('monthly');
-  const [nextDueAt, setNextDueAt] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [autopay, setAutopay] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: (data: CreateBillRequest) => vaultApi.createBill(data),
     onSuccess,
-    onError: (err: any) => setError(err.message || 'Failed to create bill'),
+    onError: (err: any) => setError(err.message || 'Failed to save bill'),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      setError('Please enter a valid bill amount greater than 0');
+      setError('Please enter a valid amount greater than 0');
       return;
     }
-    if (!nextDueAt) {
-      setError('Please specify a next due date');
+    if (!dueDate) {
+      setError('Please select a due date');
       return;
     }
 
@@ -625,40 +613,40 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
       name: name.trim(),
       amount: parsedAmount,
       currency: 'INR',
-      frequency,
       category: category.trim(),
-      nextDueAt: new Date(nextDueAt).toISOString(),
+      frequency,
+      nextDueAt: new Date(dueDate).toISOString(),
       autopay,
     });
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-surface max-w-md">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-900/60">
-          <h2 className="text-base font-semibold text-white">Add Recurring Bill</h2>
-          <button onClick={onClose} className="icon-btn" aria-label="Close">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-surface max-w-md" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-950/70">
+          <h2 className="text-sm font-semibold text-white">Add Recurring Bill</h2>
+          <button onClick={onClose} className="icon-btn h-8 w-8" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="field-label">Bill Name</label>
+            <label className="field-label">Bill / Subscription Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Home Wi-Fi, Electricity, Netflix, Gym"
-              className="field"
+              placeholder="e.g. Netflix, Electricity, Rent"
+              className="field !h-9 text-xs"
             />
           </div>
 
@@ -671,34 +659,34 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="field"
+              className="field !h-9 text-xs"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
+              <label className="field-label">Category</label>
+              <input
+                type="text"
+                required
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Utilities"
+                className="field !h-9 text-xs"
+              />
+            </div>
+            <div>
               <label className="field-label">Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as BillFrequency)}
-                className="field"
+                className="field !h-9 text-xs"
               >
+                <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
                 <option value="yearly">Yearly</option>
-                <option value="weekly">Weekly</option>
-                <option value="one_time">One-time</option>
               </select>
-            </div>
-            <div>
-              <label className="field-label">Category</label>
-              <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Utilities"
-                className="field"
-              />
             </div>
           </div>
 
@@ -707,38 +695,27 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
             <input
               type="date"
               required
-              value={nextDueAt}
-              onChange={(e) => setNextDueAt(e.target.value)}
-              className="field"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="field !h-9 text-xs"
             />
           </div>
 
-          <div className="flex items-center space-x-2.5 pt-1">
+          <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
             <input
               type="checkbox"
-              id="autopay"
               checked={autopay}
               onChange={(e) => setAutopay(e.target.checked)}
-              className="w-4 h-4 rounded bg-slate-900 border-white/20 text-brand-500 focus:ring-brand-500"
+              className="rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/20"
             />
-            <label htmlFor="autopay" className="text-xs text-slate-300 cursor-pointer">
-              Autopay enabled via credit card / standing order
-            </label>
-          </div>
+            <span>Autopay Enabled</span>
+          </label>
 
-          <div className="pt-4 border-t border-white/[0.08] flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn-ghost"
-            >
+          <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
+            <button type="button" onClick={onClose} className="btn-ghost !text-xs !py-1 !px-3">
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={mutation.isPending}
-              className="btn-primary"
-            >
+            <button type="submit" disabled={mutation.isPending} className="btn-primary !text-xs !py-1.5 !px-3.5">
               {mutation.isPending ? 'Saving...' : 'Save Bill'}
             </button>
           </div>

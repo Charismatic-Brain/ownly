@@ -8,11 +8,26 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"SF Pro Text"',
+          '"SF Pro Display"',
+          '"SF Pro"',
+          'system-ui',
+          'sans-serif',
+        ],
+        mono: [
+          '"SF Mono"',
+          'ui-monospace',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace',
+        ],
       },
       colors: {
-        // Full teal ramp. Previously 200/300/400/800 were missing, so classes like
-        // `text-brand-400` (used across the app) silently rendered with no colour.
+        // Full teal ramp reserved for sovereign primary accents & active states
         brand: {
           50: '#f0fdfa',
           100: '#ccfbf1',
@@ -29,13 +44,14 @@ export default {
           750: '#1e293b',
           850: '#151f32',
           900: '#0f172a',
-          950: '#080d1a',
+          950: '#070b14',
         },
       },
       boxShadow: {
         card: '0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6)',
         lift: '0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(20 184 166 / 0.20)',
         modal: '0 1px 0 0 rgb(255 255 255 / 0.10) inset, 0 24px 48px -12px rgb(0 0 0 / 0.75)',
+        segmented: '0 1px 2px 0 rgb(0 0 0 / 0.4), 0 1px 0 0 rgb(255 255 255 / 0.08) inset',
       },
       transitionTimingFunction: {
         spring: 'cubic-bezier(0.16, 1, 0.3, 1)',

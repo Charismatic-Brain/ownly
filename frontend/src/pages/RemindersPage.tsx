@@ -8,8 +8,9 @@ import {
   AlertTriangle,
   CheckCircle2,
   Trash2,
-  RotateCcw,
-  ExternalLink
+  ExternalLink,
+  Check,
+  CalendarDays,
 } from 'lucide-react';
 import { vaultApi } from '../lib/vaultApi';
 import { CreateReminderModal } from '../components/CreateReminderModal';
@@ -106,21 +107,21 @@ export const RemindersPage: React.FC = () => {
     return (
       <div
         key={`${item.kind}-${item.id}`}
-        className={`p-4 rounded-xl border transition-all ${
+        className={`group panel p-3.5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
           isOverdue
-            ? 'bg-rose-950/20 border-rose-900/40 hover:border-rose-700/60'
+            ? 'border-rose-500/30 bg-rose-950/10'
             : isToday
-            ? 'bg-amber-950/20 border-amber-900/40 hover:border-amber-700/60'
-            : 'bg-slate-900 border-slate-800 hover:border-slate-700'
-        } flex flex-col sm:flex-row sm:items-center justify-between gap-3`}
+            ? 'border-amber-500/30 bg-amber-950/10'
+            : 'border-white/[0.08]'
+        }`}
       >
-        <div className="space-y-1.5 min-w-0">
+        <div className="space-y-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+              className={`rounded px-1.5 py-0.2 text-[10px] font-semibold uppercase tracking-wider ${
                 item.kind === 'document_expiry'
-                  ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
-                  : 'bg-brand-500/10 text-brand-400 border border-brand-500/20'
+                  ? 'bg-purple-500/10 text-purple-300 border border-purple-500/20'
+                  : 'bg-brand-500/10 text-brand-300 border border-brand-500/20'
               }`}
             >
               {item.kind === 'document_expiry' ? 'Doc Expiry' : 'Reminder'}
@@ -128,11 +129,11 @@ export const RemindersPage: React.FC = () => {
 
             {item.priority && (
               <span
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold capitalize ${
+                className={`rounded px-1.5 py-0.2 text-[10px] font-semibold capitalize ${
                   item.priority === 'urgent'
-                    ? 'bg-rose-500/10 text-rose-400'
+                    ? 'bg-rose-500/15 text-rose-400'
                     : item.priority === 'high'
-                    ? 'bg-amber-500/10 text-amber-400'
+                    ? 'bg-amber-500/15 text-amber-300'
                     : 'bg-slate-800 text-slate-400'
                 }`}
               >
@@ -141,15 +142,15 @@ export const RemindersPage: React.FC = () => {
             )}
 
             <span
-              className={`text-xs font-semibold flex items-center space-x-1 ${
+              className={`text-xs font-semibold flex items-center gap-1 tabular-nums ${
                 isOverdue
                   ? 'text-rose-400'
                   : isToday
                   ? 'text-amber-400'
-                  : 'text-slate-300'
+                  : 'text-slate-400'
               }`}
             >
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3 h-3" />
               <span>
                 {isOverdue
                   ? `Overdue (${Math.abs(item.daysUntil)}d ago)`
@@ -160,25 +161,25 @@ export const RemindersPage: React.FC = () => {
             </span>
           </div>
 
-          <h4 className="text-sm font-bold text-white truncate">{item.title}</h4>
+          <h4 className="text-xs font-semibold text-white truncate">{item.title}</h4>
 
           {item.description && (
-            <p className="text-xs text-slate-400 line-clamp-1">{item.description}</p>
+            <p className="text-[11px] text-slate-400 line-clamp-1">{item.description}</p>
           )}
 
           {item.itemId && item.kind === 'reminder' && (
             <button
               onClick={() => handleInspectLinkedItem(item.itemId!)}
-              className="inline-flex items-center space-x-1 text-[11px] text-brand-400 hover:text-brand-300 transition-colors"
+              className="inline-flex items-center gap-1 text-[11px] text-brand-400 hover:text-brand-300 transition-colors"
             >
               <ExternalLink className="w-3 h-3" />
-              <span>View linked vault document</span>
+              <span>Inspect linked vault item</span>
             </button>
           )}
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center space-x-2 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/80">
+        <div className="flex items-center gap-1.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/[0.06]">
           {item.kind === 'reminder' ? (
             <>
               <button
@@ -189,23 +190,23 @@ export const RemindersPage: React.FC = () => {
                   })
                 }
                 title="Mark completed"
-                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-400 text-xs font-medium border border-emerald-500/20 transition-colors"
+                className="btn-secondary !text-xs !py-1 !px-2.5 text-emerald-400 hover:text-emerald-300"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                <Check className="w-3 h-3" />
                 <span>Done</span>
               </button>
 
-              <div className="flex items-center bg-slate-850 rounded-lg p-0.5 border border-slate-750 text-xs">
+              <div className="flex items-center bg-slate-950/70 rounded-lg p-0.5 border border-white/[0.08] text-xs">
                 <button
                   onClick={() => snoozeMutation.mutate({ id: item.id, daysAhead: 1 })}
-                  className="px-2 py-1 text-slate-400 hover:text-white rounded"
+                  className="px-2 py-0.5 text-[10px] text-slate-400 hover:text-white rounded"
                   title="Snooze 1 day"
                 >
                   +1d
                 </button>
                 <button
                   onClick={() => snoozeMutation.mutate({ id: item.id, daysAhead: 7 })}
-                  className="px-2 py-1 text-slate-400 hover:text-white rounded"
+                  className="px-2 py-0.5 text-[10px] text-slate-400 hover:text-white rounded"
                   title="Snooze 1 week"
                 >
                   +7d
@@ -214,16 +215,17 @@ export const RemindersPage: React.FC = () => {
 
               <button
                 onClick={() => handleDelete(item.id, item.title)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                className="icon-btn h-7 w-7 hover:text-rose-400"
                 title="Delete reminder"
+                aria-label="Delete reminder"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3 h-3" />
               </button>
             </>
           ) : (
             <button
               onClick={() => handleInspectLinkedItem(item.itemId!)}
-              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-medium border border-slate-700 transition-colors"
+              className="btn-secondary !text-xs !py-1 !px-2.5"
             >
               <span>Inspect Document</span>
             </button>
@@ -234,302 +236,350 @@ export const RemindersPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="mx-auto max-w-7xl space-y-7">
+      {/* Header (Apple Reminders Archetype) */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <Bell className="w-6 h-6 text-brand-400" />
-            <span>Reminders & Life Dates</span>
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Track document expirations, renewal deadlines, and personal alerts with clear timeline visibility.
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Reminders & Life Dates</h1>
+          <p className="mt-1 max-w-xl text-xs text-slate-400 sm:text-sm">
+            Document expirations, sovereign renewals, and timeline checklist.
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="btn-primary"
+          className="btn-primary !text-xs !py-1.5 !px-3.5"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="h-3.5 w-3.5" />
           <span>New Reminder</span>
         </button>
-      </div>
+      </header>
 
-      {/* Metric Cards */}
+      {/* Apple Reminders Smart List Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-4 rounded-2xl panel">
+        {/* Overdue */}
+        <div className="panel p-3.5 space-y-1 border-rose-500/20">
           <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase tracking-wider">
             <span>Overdue</span>
-            <AlertTriangle className="w-4 h-4" />
+            <AlertTriangle className="h-4 w-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{overdueCount}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Requires immediate attention</p>
+          <p className="text-2xl font-bold text-white tracking-tight tabular-nums font-mono">{overdueCount}</p>
+          <p className="text-[10px] text-slate-500">Urgent attention needed</p>
         </div>
 
-        <div className="p-4 rounded-2xl panel">
+        {/* Today */}
+        <div className="panel p-3.5 space-y-1 border-amber-500/20">
           <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider">
             <span>Due Today</span>
-            <Clock className="w-4 h-4" />
+            <Clock className="h-4 w-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{todayCount}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Due before end of day</p>
+          <p className="text-2xl font-bold text-white tracking-tight tabular-nums font-mono">{todayCount}</p>
+          <p className="text-[10px] text-slate-500">Expires before midnight</p>
         </div>
 
-        <div className="p-4 rounded-2xl panel">
+        {/* This Week */}
+        <div className="panel p-3.5 space-y-1 border-brand-500/20">
           <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase tracking-wider">
             <span>This Week</span>
-            <Calendar className="w-4 h-4" />
+            <Calendar className="h-4 w-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{thisWeekCount}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Next 7 calendar days</p>
+          <p className="text-2xl font-bold text-white tracking-tight tabular-nums font-mono">{thisWeekCount}</p>
+          <p className="text-[10px] text-slate-500">Next 7 calendar days</p>
         </div>
 
-        <div className="p-4 rounded-2xl panel">
+        {/* Completed */}
+        <div className="panel p-3.5 space-y-1 border-emerald-500/20">
           <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase tracking-wider">
             <span>Completed</span>
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="h-4 w-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2 tracking-tight">{totalCompleted}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Resolved in-app alerts</p>
+          <p className="text-2xl font-bold text-white tracking-tight tabular-nums font-mono">{totalCompleted}</p>
+          <p className="text-[10px] text-slate-500">Resolved life items</p>
         </div>
       </div>
 
-      {/* View Tabs */}
-      <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
-        <button
-          onClick={() => setActiveTab('timeline')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
-            activeTab === 'timeline'
-              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-          }`}
-        >
-          Upcoming Deadlines
-        </button>
-        <button
-          onClick={() => setActiveTab('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
-            activeTab === 'all'
-              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-          }`}
-        >
-          All Reminders ({reminders.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-[0.98] ${
-            activeTab === 'completed'
-              ? 'bg-brand-500 text-slate-950 font-bold shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-          }`}
-        >
-          Completed Archive ({totalCompleted})
-        </button>
+      {/* Recessed Segmented Navigation */}
+      <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+        <div className="segmented-track">
+          <button
+            onClick={() => setActiveTab('timeline')}
+            className={`segmented-item ${activeTab === 'timeline' ? 'segmented-item-active' : ''}`}
+          >
+            Active Timeline ({(deadlines?.overdue?.length || 0) + (deadlines?.today?.length || 0) + (deadlines?.thisWeek?.length || 0) + (deadlines?.upcoming?.length || 0)})
+          </button>
+          <button
+            onClick={() => setActiveTab('all')}
+            className={`segmented-item ${activeTab === 'all' ? 'segmented-item-active' : ''}`}
+          >
+            All Reminders ({reminders.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('completed')}
+            className={`segmented-item ${activeTab === 'completed' ? 'segmented-item-active' : ''}`}
+          >
+            Completed ({totalCompleted})
+          </button>
+        </div>
       </div>
 
-      {/* Content for: Upcoming Deadlines Timeline */}
+      {/* View: Unified Timeline */}
       {activeTab === 'timeline' && (
         <div className="space-y-6">
           {deadlinesLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
-              <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs">Computing upcoming timeline...</p>
+            <div className="p-14 text-center text-slate-400 space-y-2.5">
+              <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs">Computing cryptographic deadlines...</p>
             </div>
           )}
 
-          {!deadlinesLoading && (deadlines?.totalActive ?? 0) === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-emerald-400">
-                <CheckCircle2 className="w-6 h-6" />
+          {!deadlinesLoading &&
+            (!deadlines ||
+              (overdueCount === 0 &&
+                todayCount === 0 &&
+                thisWeekCount === 0 &&
+                (deadlines.upcoming?.length ?? 0) === 0)) && (
+              <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center flex flex-col items-center justify-center space-y-2.5">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800 text-brand-400 border border-white/10">
+                  <CalendarDays className="h-5 w-5" />
+                </div>
+                <h4 className="text-sm font-semibold text-white">No upcoming deadlines</h4>
+                <p className="text-xs text-slate-400 max-w-sm">
+                  Your vault has no upcoming document expirations or reminders scheduled.
+                </p>
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="btn-primary mt-2 !text-xs !py-1.5 !px-3.5"
+                >
+                  Create First Reminder
+                </button>
               </div>
-              <h4 className="text-base font-semibold text-white">No upcoming deadlines</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
-                All your documents are up-to-date and there are no pending reminders scheduled.
-              </p>
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700 transition-colors"
-              >
-                + Add a Reminder
-              </button>
+            )}
+
+          {/* Overdue Section */}
+          {overdueCount > 0 && (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <AlertTriangle className="h-4 w-4 text-rose-400" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-rose-400">
+                  Overdue ({overdueCount})
+                </h3>
+              </div>
+              <div className="space-y-2">{deadlines?.overdue?.map(renderDeadlineCard)}</div>
             </div>
           )}
 
-          {/* Section: Overdue */}
-          {!deadlinesLoading && deadlines?.overdue && deadlines.overdue.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-bold text-rose-400 uppercase tracking-wider">
-                <AlertTriangle className="w-4 h-4" />
-                <span>Overdue ({deadlines.overdue.length})</span>
+          {/* Today Section */}
+          {todayCount > 0 && (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <Clock className="h-4 w-4 text-amber-400" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+                  Due Today ({todayCount})
+                </h3>
               </div>
-              <div className="space-y-2.5">{deadlines.overdue.map(renderDeadlineCard)}</div>
+              <div className="space-y-2">{deadlines?.today?.map(renderDeadlineCard)}</div>
             </div>
           )}
 
-          {/* Section: Due Today */}
-          {!deadlinesLoading && deadlines?.today && deadlines.today.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
-                <Clock className="w-4 h-4" />
-                <span>Due Today ({deadlines.today.length})</span>
+          {/* This Week Section */}
+          {thisWeekCount > 0 && (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <Calendar className="h-4 w-4 text-brand-400" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                  This Week ({thisWeekCount})
+                </h3>
               </div>
-              <div className="space-y-2.5">{deadlines.today.map(renderDeadlineCard)}</div>
+              <div className="space-y-2">{deadlines?.thisWeek?.map(renderDeadlineCard)}</div>
             </div>
           )}
 
-          {/* Section: This Week */}
-          {!deadlinesLoading && deadlines?.thisWeek && deadlines.thisWeek.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
-                <Calendar className="w-4 h-4" />
-                <span>Due This Week ({deadlines.thisWeek.length})</span>
+          {/* Upcoming Section */}
+          {(deadlines?.upcoming?.length ?? 0) > 0 && (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <CalendarDays className="h-4 w-4 text-slate-500" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Later (Next 30 Days) ({deadlines?.upcoming?.length})
+                </h3>
               </div>
-              <div className="space-y-2.5">{deadlines.thisWeek.map(renderDeadlineCard)}</div>
-            </div>
-          )}
-
-          {/* Section: Upcoming Later */}
-          {!deadlinesLoading && deadlines?.upcoming && deadlines.upcoming.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                <Clock className="w-4 h-4 text-brand-400" />
-                <span>Upcoming (Next 30 Days) ({deadlines.upcoming.length})</span>
-              </div>
-              <div className="space-y-2.5">{deadlines.upcoming.map(renderDeadlineCard)}</div>
+              <div className="space-y-2">{deadlines?.upcoming?.map(renderDeadlineCard)}</div>
             </div>
           )}
         </div>
       )}
 
-      {/* Content for: All Reminders or Completed Archive */}
-      {(activeTab === 'all' || activeTab === 'completed') && (
-        <div className="space-y-3">
+      {/* View: All Reminders (Apple Reminders Circular Checklist) */}
+      {activeTab === 'all' && (
+        <div className="space-y-2">
           {remindersLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
-              <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="p-14 text-center text-slate-400 space-y-2.5">
+              <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading reminders...</p>
             </div>
           )}
 
-          {(() => {
-            const list = reminders.filter((r) =>
-              activeTab === 'completed' ? r.status === 'completed' : r.status !== 'completed'
-            );
+          {!remindersLoading && reminders.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center flex flex-col items-center justify-center space-y-2.5">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800 text-brand-400 border border-white/10">
+                <Bell className="h-5 w-5" />
+              </div>
+              <h4 className="text-sm font-semibold text-white">No reminders created</h4>
+              <p className="text-xs text-slate-400 max-w-sm">
+                Add renewal alerts, passport dates, and critical follow-ups.
+              </p>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="btn-primary mt-2 !text-xs !py-1.5 !px-3.5"
+              >
+                + Add Reminder
+              </button>
+            </div>
+          )}
 
-            if (!remindersLoading && list.length === 0) {
+          {!remindersLoading &&
+            reminders.map((r) => {
+              const isCompleted = r.status === 'completed';
               return (
-                <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                    <Bell className="w-6 h-6 text-brand-400" />
+                <div
+                  key={r.id}
+                  className="group panel p-3 flex items-center justify-between gap-3 hover:border-brand-500/25 transition-all select-none"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    {/* Apple Reminders Circular Checkbox */}
+                    <button
+                      onClick={() =>
+                        toggleCompleteMutation.mutate({
+                          id: r.id,
+                          currentStatus: r.status,
+                        })
+                      }
+                      className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-all ${
+                        isCompleted
+                          ? 'border-emerald-500 bg-emerald-500 text-slate-950'
+                          : 'border-slate-600 hover:border-brand-400 bg-transparent'
+                      }`}
+                      aria-label={isCompleted ? 'Mark uncompleted' : 'Mark completed'}
+                    >
+                      {isCompleted && <Check className="h-3 w-3 stroke-[3]" />}
+                    </button>
+
+                    <div className="min-w-0">
+                      <p
+                        className={`text-xs font-semibold truncate ${
+                          isCompleted ? 'text-slate-500 line-through' : 'text-white'
+                        }`}
+                      >
+                        {r.title}
+                      </p>
+                      <div className="flex items-center gap-2 text-[10px] text-slate-500 tabular-nums">
+                        <span>Due {new Date(r.remindAt).toLocaleDateString()}</span>
+                        {r.priority && (
+                          <span
+                            className={`rounded px-1 text-[9px] font-bold uppercase ${
+                              r.priority === 'urgent'
+                                ? 'bg-rose-500/15 text-rose-400'
+                                : r.priority === 'high'
+                                ? 'bg-amber-500/15 text-amber-300'
+                                : 'bg-slate-800 text-slate-400'
+                            }`}
+                          >
+                            {r.priority}
+                          </span>
+                        )}
+                        {r.itemId && (
+                          <button
+                            onClick={() => handleInspectLinkedItem(r.itemId!)}
+                            className="text-brand-400 hover:underline"
+                          >
+                            Linked Asset
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <h4 className="text-base font-semibold text-white">
-                    {activeTab === 'completed' ? 'No completed reminders yet' : 'No active reminders'}
-                  </h4>
-                  <p className="text-xs text-slate-400">
-                    {activeTab === 'completed'
-                      ? 'Marked completed reminders will be archived here.'
-                      : 'Set reminders for deadlines, appointments, and bill renewals.'}
-                  </p>
+
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => handleDelete(r.id, r.title)}
+                      className="icon-btn h-7 w-7 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-rose-400 transition-opacity"
+                      title="Delete"
+                      aria-label="Delete"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
               );
-            }
-
-            return list.map((rem) => (
-              <div
-                key={rem.id}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-semibold capitalize ${
-                        rem.status === 'completed'
-                          ? 'bg-emerald-500/10 text-emerald-400'
-                          : rem.isOverdue
-                          ? 'bg-rose-500/10 text-rose-400'
-                          : 'bg-slate-800 text-slate-300'
-                      }`}
-                    >
-                      {rem.status}
-                    </span>
-                    <h4
-                      className={`text-sm font-semibold ${
-                        rem.status === 'completed' ? 'line-through text-slate-500' : 'text-white'
-                      }`}
-                    >
-                      {rem.title}
-                    </h4>
-                  </div>
-
-                  {rem.description && (
-                    <p className="text-xs text-slate-400 line-clamp-1">{rem.description}</p>
-                  )}
-
-                  <div className="flex items-center space-x-3 text-[11px] text-slate-500 pt-1">
-                    <span className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
-                      <span>Due: {new Date(rem.remindAt).toLocaleString()}</span>
-                    </span>
-                    {rem.itemTitle && (
-                      <span className="text-brand-400">Linked: {rem.itemTitle}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2 flex-shrink-0">
-                  <button
-                    onClick={() =>
-                      toggleCompleteMutation.mutate({
-                        id: rem.id,
-                        currentStatus: rem.status,
-                      })
-                    }
-                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-medium border border-slate-700 transition-colors"
-                  >
-                    {rem.status === 'completed' ? (
-                      <>
-                        <RotateCcw className="w-3.5 h-3.5" />
-                        <span>Reopen</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Complete</span>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(rem.id, rem.title)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ));
-          })()}
+            })}
         </div>
       )}
 
-      {/* Create Reminder Modal */}
-      <CreateReminderModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-      />
+      {/* View: Completed Reminders */}
+      {activeTab === 'completed' && (
+        <div className="space-y-2">
+          {reminders.filter((r) => r.status === 'completed').length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 p-14 text-center">
+              <p className="text-xs text-slate-400">No completed reminders yet.</p>
+            </div>
+          ) : (
+            reminders
+              .filter((r) => r.status === 'completed')
+              .map((r) => (
+                <div
+                  key={r.id}
+                  className="panel p-3 flex items-center justify-between gap-3 text-slate-500"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <button
+                      onClick={() =>
+                        toggleCompleteMutation.mutate({
+                          id: r.id,
+                          currentStatus: r.status,
+                        })
+                      }
+                      className="grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 border-emerald-500 bg-emerald-500 text-slate-950"
+                      title="Mark incomplete"
+                    >
+                      <Check className="h-3 w-3 stroke-[3]" />
+                    </button>
+                    <span className="text-xs line-through truncate text-slate-400">{r.title}</span>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(r.id, r.title)}
+                    className="icon-btn h-7 w-7 hover:text-rose-400"
+                    title="Delete"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))
+          )}
+        </div>
+      )}
 
-      {/* Item Detail Modal */}
+      {/* Modals & QuickLook */}
+      {isCreateModalOpen && (
+        <CreateReminderModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+        />
+      )}
+
       <ItemDetailModal
         item={viewingItem}
         collections={collections}
         onClose={() => setViewingItem(null)}
         onRefresh={() => {
-          queryClient.invalidateQueries({ queryKey: ['deadlines'] });
+          queryClient.invalidateQueries({ queryKey: ['items'] });
+          if (viewingItem) {
+            vaultApi.getItem(viewingItem.id).then(setViewingItem);
+          }
         }}
         onToggleFavorite={async () => {}}
-        onDeleteItem={async () => {}}
+        onDeleteItem={async () => {
+          setViewingItem(null);
+        }}
       />
     </div>
   );
