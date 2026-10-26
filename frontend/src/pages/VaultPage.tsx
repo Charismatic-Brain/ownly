@@ -133,10 +133,10 @@ export const VaultPage: React.FC = () => {
   };
 
   const navBtn = (active: boolean) =>
-    `relative flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors ${
+    `relative flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium transition-all ${
       active
-        ? 'bg-brand-500/10 text-brand-200'
-        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'
+        ? 'bg-white text-slate-900 shadow-xs font-semibold'
+        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`;
 
   return (
@@ -144,15 +144,15 @@ export const VaultPage: React.FC = () => {
       {/* Page header */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-3xl font-bold tracking-tight text-white">My Vault</h1>
-          <p className="mt-1.5 max-w-xl text-sm text-slate-400">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">My Vault</h1>
+          <p className="mt-1.5 max-w-xl text-sm text-slate-500">
             Documents, notes, links and records, organised into your own collections.
           </p>
         </div>
 
         <div className="flex shrink-0 items-center gap-2.5">
           <button onClick={() => setIsCreateColOpen(true)} className="btn-ghost">
-            <Folder className="h-4 w-4 text-brand-300" />
+            <Folder className="h-4 w-4 text-slate-700" />
             New collection
           </button>
           <button onClick={() => setIsCreateItemOpen(true)} className="btn-primary">
@@ -166,11 +166,11 @@ export const VaultPage: React.FC = () => {
         {/* Collections rail */}
         <aside className="panel p-3 lg:sticky lg:top-24">
           <div className="flex items-center justify-between px-3 pb-2 pt-1.5">
-            <h3 className="text-sm font-semibold text-slate-200">Collections</h3>
+            <h3 className="text-sm font-semibold text-slate-900">Collections</h3>
             <span className="text-xs tabular-nums text-slate-500">{collections.length}</span>
           </div>
 
-          <nav className="space-y-0.5">
+          <nav className="space-y-1">
             <button onClick={() => setSelectedCollectionId(null)} className={navBtn(selectedCollectionId === null)}>
               <FolderLock className="h-4 w-4 shrink-0" />
               <span className="truncate">All items</span>
@@ -182,7 +182,7 @@ export const VaultPage: React.FC = () => {
           </nav>
 
           {collections.length > 0 && (
-            <div className="mt-3 space-y-0.5 border-t border-white/[0.06] pt-3">
+            <div className="mt-3 space-y-1 border-t border-slate-100 pt-3">
               {collections.map((col) => {
                 const Icon = COLLECTION_ICONS[col.icon] ?? Folder;
                 const active = selectedCollectionId === col.id;
@@ -203,7 +203,7 @@ export const VaultPage: React.FC = () => {
                           deleteCollectionMutation.mutate(col.id);
                         }
                       }}
-                      className="icon-btn absolute right-1.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 hover:text-rose-300 group-focus-within:grid group-hover:grid"
+                      className="icon-btn absolute right-1.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 hover:text-rose-600 group-focus-within:grid group-hover:grid"
                       aria-label={`Delete collection ${col.name}`}
                       title="Delete collection"
                     >
@@ -216,11 +216,11 @@ export const VaultPage: React.FC = () => {
           )}
 
           {collections.length === 0 && (
-            <div className="mt-3 rounded-xl border border-dashed border-white/10 px-3 py-5 text-center">
-              <p className="text-sm text-slate-400">No collections yet.</p>
+            <div className="mt-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-3 py-5 text-center">
+              <p className="text-sm text-slate-500">No collections yet.</p>
               <button
                 onClick={() => setIsCreateColOpen(true)}
-                className="mt-2 text-sm font-semibold text-brand-300 hover:text-brand-200"
+                className="mt-2 text-sm font-semibold text-brand-700 hover:text-brand-800"
               >
                 Create your first collection
               </button>
@@ -253,7 +253,7 @@ export const VaultPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto rounded-xl border border-white/[0.07] bg-slate-950/50 p-1 md:flex-none">
+              <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-slate-100/90 p-1 md:flex-none">
                 {KIND_FILTERS.map((tab) => {
                   const active = filterKind === tab.value;
                   return (
@@ -261,10 +261,10 @@ export const VaultPage: React.FC = () => {
                       key={tab.value}
                       onClick={() => setFilterKind(tab.value)}
                       aria-pressed={active}
-                      className={`h-8 shrink-0 rounded-lg px-3.5 text-sm font-medium transition-colors ${
+                      className={`h-8 shrink-0 rounded-lg px-3.5 text-xs sm:text-sm font-medium transition-all ${
                         active
-                          ? 'bg-brand-500 text-slate-950 shadow-sm'
-                          : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
+                          ? 'bg-white text-slate-900 font-semibold shadow-xs border border-black/[0.04]'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       {tab.label}
@@ -276,21 +276,21 @@ export const VaultPage: React.FC = () => {
               <button
                 onClick={() => setOnlyFavorites(!onlyFavorites)}
                 aria-pressed={onlyFavorites}
-                className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border transition-colors ${
+                className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border transition-all ${
                   onlyFavorites
-                    ? 'border-amber-400/30 bg-amber-400/10 text-amber-300'
-                    : 'border-white/[0.07] bg-slate-950/50 text-slate-400 hover:text-slate-100'
+                    ? 'border-amber-300 bg-amber-50 text-amber-600 shadow-xs'
+                    : 'border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }`}
                 title="Show favourites only"
               >
-                <Star className={`h-4 w-4 ${onlyFavorites ? 'fill-amber-300' : ''}`} />
+                <Star className={`h-4 w-4 ${onlyFavorites ? 'fill-amber-400 text-amber-600' : ''}`} />
               </button>
             </div>
           </div>
 
           {/* Section heading */}
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1">
-            <h2 className="text-lg font-semibold text-white">{getCollectionTitle()}</h2>
+            <h2 className="text-lg font-bold text-slate-900">{getCollectionTitle()}</h2>
             <span className="text-sm tabular-nums text-slate-500">{pluralize(items.length, 'item')}</span>
             {currentCollection?.description && (
               <span className="hidden text-sm text-slate-500 sm:inline">{currentCollection.description}</span>
@@ -300,18 +300,18 @@ export const VaultPage: React.FC = () => {
           {itemsLoading && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="h-52 animate-pulse rounded-2xl border border-white/[0.05] bg-slate-900/50" />
+                <div key={i} className="h-52 animate-pulse rounded-2xl border border-slate-200/80 bg-slate-100/60" />
               ))}
             </div>
           )}
 
           {!itemsLoading && items.length === 0 && (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-slate-900/30 px-6 py-16 text-center">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200/90 bg-white p-12 text-center shadow-xs">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-50 text-teal-600 border border-teal-200/70 shadow-xs">
                 <Sparkles className="h-6 w-6" />
               </div>
-              <h4 className="mt-4 text-base font-semibold text-white">Nothing here yet</h4>
-              <p className="mt-1.5 max-w-sm text-sm text-slate-400">
+              <h4 className="mt-4 text-base font-bold text-slate-900">Nothing here yet</h4>
+              <p className="mt-1.5 max-w-sm text-sm text-slate-500">
                 Add a document, note, link or record. Items you add appear here.
               </p>
               <button onClick={() => setIsCreateItemOpen(true)} className="btn-primary mt-5">

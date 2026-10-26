@@ -53,12 +53,12 @@ export const ActivityPage: React.FC = () => {
   }, [selectedCategory, selectedOutcome, page]);
 
   const getActionIcon = (action: string) => {
-    if (action.startsWith('auth.')) return <Lock className="w-4 h-4 text-brand-400" />;
-    if (action.startsWith('share.')) return <Share2 className="w-4 h-4 text-purple-400" />;
-    if (action.startsWith('family.')) return <Users className="w-4 h-4 text-teal-400" />;
+    if (action.startsWith('auth.')) return <Lock className="w-4 h-4 text-brand-700" />;
+    if (action.startsWith('share.')) return <Share2 className="w-4 h-4 text-purple-700" />;
+    if (action.startsWith('family.')) return <Users className="w-4 h-4 text-teal-700" />;
     if (action.startsWith('item.') || action.startsWith('file.'))
-      return <FileText className="w-4 h-4 text-sky-400" />;
-    return <Activity className="w-4 h-4 text-slate-400" />;
+      return <FileText className="w-4 h-4 text-sky-700" />;
+    return <Activity className="w-4 h-4 text-slate-500" />;
   };
 
   const formatActionTitle = (action: string) => {
@@ -99,11 +99,11 @@ export const ActivityPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <Activity className="w-7 h-7 text-brand-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center space-x-2.5">
+            <Activity className="w-7 h-7 text-brand-700" />
             <span>Security & Audit Trail</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             Immutable log of account authentication, access verification, and vault permissions.
           </p>
         </div>
@@ -111,7 +111,7 @@ export const ActivityPage: React.FC = () => {
         <button
           onClick={() => fetchLogs(true)}
           disabled={refreshing}
-          className="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-xl transition-all self-start sm:self-auto border border-slate-700"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-semibold rounded-xl transition-all self-start sm:self-auto border border-slate-200"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           <span>Refresh Feed</span>
@@ -119,7 +119,7 @@ export const ActivityPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-900 border border-slate-800 rounded-2xl">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white border border-slate-200/80 rounded-2xl">
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
           {[
@@ -137,8 +137,8 @@ export const ActivityPage: React.FC = () => {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 selectedCategory === cat.id
-                  ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-brand-600 text-white shadow-md '
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               {cat.label}
@@ -155,7 +155,7 @@ export const ActivityPage: React.FC = () => {
               setSelectedOutcome(e.target.value);
               setPage(1);
             }}
-            className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-slate-300 text-xs focus:outline-none focus:border-brand-500"
+            className="field px-2.5 py-1 rounded-lg text-xs"
           >
             <option value="all">All Outcomes</option>
             <option value="success">Successful</option>
@@ -167,13 +167,13 @@ export const ActivityPage: React.FC = () => {
       {/* Audit Log Stream */}
       {loading ? (
         <div className="p-16 text-center text-slate-500 text-xs flex items-center justify-center space-x-2">
-          <Loader2 className="w-5 h-5 animate-spin text-brand-400" />
+          <Loader2 className="w-5 h-5 animate-spin text-brand-700" />
           <span>Loading security audit records...</span>
         </div>
       ) : logs.length === 0 ? (
-        <div className="p-16 bg-slate-900 border border-slate-800 rounded-2xl text-center space-y-2">
-          <ShieldCheck className="w-10 h-10 text-slate-600 mx-auto" />
-          <p className="text-sm font-medium text-slate-300">No audit events match your filter</p>
+        <div className="p-16 bg-white border border-slate-200/80 rounded-2xl text-center space-y-2">
+          <ShieldCheck className="w-10 h-10 text-slate-300 mx-auto" />
+          <p className="text-sm font-medium text-slate-700">No audit events match your filter</p>
           <p className="text-xs text-slate-500">
             Security actions, authorization checks, and vault mutations are automatically logged here.
           </p>
@@ -183,39 +183,39 @@ export const ActivityPage: React.FC = () => {
           {logs.map((log) => (
             <div
               key={log.id}
-              className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700/80 transition-colors"
+              className="p-4 bg-white border border-slate-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 transition-colors"
             >
               <div className="flex items-start space-x-3.5">
-                <div className="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center flex-shrink-0 mt-0.5">
                   {getActionIcon(log.action)}
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold text-white">
+                    <span className="text-sm font-bold text-slate-900">
                       {formatActionTitle(log.action)}
                     </span>
                     {log.outcome === 'success' ? (
-                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-teal-50 text-teal-700 border border-teal-200/60">
                         <CheckCircle2 className="w-3 h-3" />
                         <span>Success</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200/60">
                         <XCircle className="w-3 h-3" />
                         <span>Denied</span>
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mt-1">
                     <span>
-                      Actor: <strong className="text-slate-300 font-medium">{log.actorEmail || log.actorUserId}</strong>
+                      Actor: <strong className="text-slate-700 font-medium">{log.actorEmail || log.actorUserId}</strong>
                     </span>
                     {log.resourceType && (
                       <>
                         <span>•</span>
                         <span>
-                          Resource: <span className="text-slate-300 capitalize">{log.resourceType}</span>
+                          Resource: <span className="text-slate-700 capitalize">{log.resourceType}</span>
                         </span>
                       </>
                     )}
@@ -227,7 +227,7 @@ export const ActivityPage: React.FC = () => {
                       {Object.entries(log.metadata).map(([k, v]) => (
                         <span
                           key={k}
-                          className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-slate-950 text-slate-400 border border-slate-800"
+                          className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-slate-50 text-slate-500 border border-slate-200/80"
                         >
                           {k}: {String(v)}
                         </span>
@@ -239,7 +239,7 @@ export const ActivityPage: React.FC = () => {
 
               {/* Timestamp */}
               <div className="text-right text-xs text-slate-500 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center flex-shrink-0">
-                <span className="text-slate-400 font-medium">
+                <span className="text-slate-500 font-medium">
                   {new Date(log.createdAt).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',

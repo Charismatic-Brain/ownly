@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // The session is an httpOnly cookie managed by the server; the browser never sees the token.
 // Remove any token left in localStorage by earlier versions of the app.
-const LEGACY_TOKEN_KEY = 'ownly_token';
+const LEGACY_TOKEN_KEYS = ['arkive_token', 'ownly_token'];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
-      localStorage.removeItem(LEGACY_TOKEN_KEY);
+      LEGACY_TOKEN_KEYS.forEach((k) => localStorage.removeItem(k));
     } catch {
       // storage may be unavailable (private mode); nothing to clean up
     }

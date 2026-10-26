@@ -7,11 +7,11 @@ export const Layout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-slate-950 text-slate-100 lg:flex-row">
-      {/* Soft teal wash behind the content area */}
+    <div className="relative flex min-h-screen flex-col bg-[#fbfbfd] text-slate-900 lg:flex-row">
+      {/* Soft wash behind the content area */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_100%_at_70%_0%,rgb(20_184_166/0.10),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_100%_at_70%_0%,rgba(20,184,166,0.04),transparent)]"
       />
 
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

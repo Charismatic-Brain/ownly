@@ -62,27 +62,27 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h3 className="text-lg font-bold text-white">Create New Collection</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-in fade-in duration-150">
+      <div className="bg-white border border-black/[0.08] rounded-3xl w-full max-w-md shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] text-slate-900 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
+          <h3 className="text-lg font-bold text-slate-900">Create New Collection</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="icon-btn"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {error && (
-          <div className="mx-6 mt-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+          <div className="mx-6 mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Collection Name *
             </label>
             <input
@@ -91,12 +91,12 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Identity & Passports, Healthcare, Vehicles"
-              className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Description (Optional)
             </label>
             <input
@@ -104,18 +104,18 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief note about what belongs here"
-              className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+              className="field"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Parent Collection (Nesting)
             </label>
             <select
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+              className="field"
             >
               <option value="">None (Top-Level Root Collection)</option>
               {collections.map((c) => (
@@ -127,7 +127,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
               Choose Icon
             </label>
             <div className="grid grid-cols-5 gap-2">
@@ -141,8 +141,8 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
                     onClick={() => setSelectedIcon(item.name)}
                     className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all ${
                       isSelected
-                        ? 'bg-brand-600/20 border-brand-500 text-brand-400 shadow-md shadow-brand-500/10'
-                        : 'bg-slate-850 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                        ? 'bg-white border-slate-100 text-slate-900 shadow-xs font-semibold'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <IconComp className="w-5 h-5 mb-1" />
@@ -153,20 +153,20 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
             </div>
           </div>
 
-          <div className="pt-3 flex items-center justify-end space-x-3">
+          <div className="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800"
+              className="btn-ghost"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !name.trim()}
-              className="inline-flex items-center space-x-2 px-5 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium transition-colors shadow-lg shadow-brand-600/25 disabled:opacity-50"
+              className="btn-primary"
             >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading && <Loader2 className="w-4 h-4 animate-spin text-slate-900" />}
               <span>Create Collection</span>
             </button>
           </div>

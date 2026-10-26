@@ -4,6 +4,12 @@ from typing import Optional
 from app.config import settings
 import logging
 
+try:
+    import certifi
+    _ca_file = certifi.where()
+except ImportError:
+    _ca_file = None
+
 logger = logging.getLogger("ownly.db")
 
 
@@ -22,9 +28,16 @@ mongo_manager = MongoManager()
 
 async def connect_to_mongo() -> None:
     logger.info("Connecting to MongoDB at %s...", _redact_uri(settings.MONGODB_URI))
+    client_kwargs = {
+        "serverSelectionTimeoutMS": 5000,
+    }
+    uri_lower = settings.MONGODB_URI.lower()
+    if _ca_file and ("+srv" in uri_lower or "tls=true" in uri_lower or "ssl=true" in uri_lower):
+        client_kwargs["tlsCAFile"] = _ca_file
+
     mongo_manager.client = AsyncIOMotorClient(
         settings.MONGODB_URI,
-        serverSelectionTimeoutMS=5000
+        **client_kwargs
     )
     mongo_manager.db = mongo_manager.client[settings.MONGODB_DATABASE]
     # Ping database to confirm connection

@@ -57,26 +57,26 @@ export const KIND_META: Record<ItemKind, KindMeta> = {
   file: {
     label: 'File',
     icon: Paperclip,
-    tile: 'bg-brand-500/10 text-brand-300 ring-brand-400/20',
-    chip: 'text-brand-300',
+    tile: 'bg-teal-50 text-teal-700 ring-teal-200/60',
+    chip: 'text-teal-700',
   },
   note: {
     label: 'Note',
     icon: StickyNote,
-    tile: 'bg-amber-500/10 text-amber-300 ring-amber-400/20',
-    chip: 'text-amber-300',
+    tile: 'bg-amber-50 text-amber-700 ring-amber-200/60',
+    chip: 'text-amber-700',
   },
   link: {
     label: 'Link',
     icon: LinkIcon,
-    tile: 'bg-sky-500/10 text-sky-300 ring-sky-400/20',
-    chip: 'text-sky-300',
+    tile: 'bg-sky-50 text-sky-700 ring-sky-200/60',
+    chip: 'text-sky-700',
   },
   record: {
     label: 'Record',
     icon: Layers,
-    tile: 'bg-emerald-500/10 text-emerald-300 ring-emerald-400/20',
-    chip: 'text-emerald-300',
+    tile: 'bg-purple-50 text-purple-700 ring-purple-200/60',
+    chip: 'text-purple-700',
   },
 };
 
@@ -91,10 +91,10 @@ const FileStrip: React.FC<{ file: FileAsset; extra: number }> = ({ file, extra }
   const Icon = fileIconFor(file.mimeType);
   const ext = fileExt(file.originalName);
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-slate-950/50 px-3 py-2.5">
-      <Icon className="h-4 w-4 shrink-0 text-slate-400" />
+    <div className="flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/80 px-3 py-2.5">
+      <Icon className="h-4 w-4 shrink-0 text-slate-500" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium text-slate-200" title={file.originalName}>
+        <p className="truncate text-xs font-semibold text-slate-800" title={file.originalName}>
           {file.originalName}
         </p>
         <p className="mt-0.5 truncate text-[11px] text-slate-500">
@@ -102,7 +102,7 @@ const FileStrip: React.FC<{ file: FileAsset; extra: number }> = ({ file, extra }
         </p>
       </div>
       {extra > 0 && (
-        <span className="shrink-0 rounded-md bg-white/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-slate-300">
+        <span className="shrink-0 rounded-md bg-slate-200 px-1.5 py-0.5 text-[11px] font-semibold text-slate-700">
           +{extra}
         </span>
       )}
@@ -140,7 +140,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onOpen, onToggleFavori
           onOpen(item);
         }
       }}
-      className="group flex h-full cursor-pointer flex-col rounded-2xl border border-white/[0.07] bg-slate-900/70 p-5 shadow-card transition duration-150 hover:-translate-y-0.5 hover:border-brand-400/25 hover:bg-slate-900 hover:shadow-lift"
+      className="group flex h-full cursor-pointer flex-col rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
     >
       {/* Header: icon tile, kind label, favourite */}
       <div className="flex items-start gap-3">
@@ -149,13 +149,13 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onOpen, onToggleFavori
         </div>
 
         <div className="min-w-0 flex-1 pt-0.5">
-          <h4 className="line-clamp-2 text-[15px] font-semibold leading-snug text-white [overflow-wrap:anywhere]">
+          <h4 className="line-clamp-2 text-[15px] font-semibold leading-snug text-slate-900 [overflow-wrap:anywhere]">
             {item.title}
           </h4>
           <p className={`mt-1 flex items-center gap-1.5 text-xs font-medium ${meta.chip}`}>
             <span>{meta.label}</span>
             {item.kind !== 'file' && attachmentCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-slate-400">
+              <span className="inline-flex items-center gap-1 text-slate-500">
                 <Paperclip className="h-3 w-3" />
                 {attachmentCount}
               </span>
@@ -171,24 +171,24 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onOpen, onToggleFavori
             e.stopPropagation();
             onToggleFavorite(item.id);
           }}
-          className="icon-btn -mr-2 -mt-1.5 hover:text-amber-300"
+          className="icon-btn -mr-2 -mt-1.5 hover:text-amber-500"
         >
-          <Star className={`h-[18px] w-[18px] ${item.favorite ? 'fill-amber-300 text-amber-300' : ''}`} />
+          <Star className={`h-[18px] w-[18px] ${item.favorite ? 'fill-amber-400 text-amber-500' : 'text-slate-400'}`} />
         </button>
       </div>
 
       {/* Body: grows so every footer lines up along the bottom edge */}
       <div className="mt-4 flex flex-1 flex-col gap-3">
         {showDescription && (
-          <p className="line-clamp-2 text-[13px] leading-relaxed text-slate-400">{item.description}</p>
+          <p className="line-clamp-2 text-[13px] leading-relaxed text-slate-600">{item.description}</p>
         )}
 
         {item.kind === 'note' && item.content && !showDescription && (
-          <p className="line-clamp-2 text-[13px] leading-relaxed text-slate-400">{item.content}</p>
+          <p className="line-clamp-2 text-[13px] leading-relaxed text-slate-600 font-mono text-xs">{item.content}</p>
         )}
 
         {item.kind === 'link' && item.url && (
-          <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-sky-300/90">
+          <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-sky-600 font-medium">
             <ExternalLink className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{item.url}</span>
           </div>
@@ -198,25 +198,25 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onOpen, onToggleFavori
       </div>
 
       {/* Footer */}
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.06] pt-3.5 text-xs text-slate-500">
+      <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-3.5 text-xs text-slate-500">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="shrink-0 tabular-nums">{formatDate(item.createdAt)}</span>
+          <span className="shrink-0 tabular-nums text-slate-400">{formatDate(item.createdAt)}</span>
           {tags.length > 0 && (
-            <span className="flex min-w-0 items-center gap-1 text-slate-400">
-              <Tag className="h-3 w-3 shrink-0" />
+            <span className="flex min-w-0 items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md text-[11px]">
+              <Tag className="h-3 w-3 shrink-0 text-slate-400" />
               <span className="truncate">{tags[0]}</span>
-              {tags.length > 1 && <span className="shrink-0 text-slate-500">+{tags.length - 1}</span>}
+              {tags.length > 1 && <span className="shrink-0 text-slate-400">+{tags.length - 1}</span>}
             </span>
           )}
         </div>
 
         {item.expiresAt ? (
-          <span className="flex shrink-0 items-center gap-1 font-medium text-amber-300/90">
+          <span className="flex shrink-0 items-center gap-1 font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-md">
             <Clock className="h-3 w-3" />
             Expires {formatDate(item.expiresAt)}
           </span>
         ) : (
-          <ChevronRight className="h-4 w-4 shrink-0 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-brand-300" />
+          <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-slate-700" />
         )}
       </div>
     </article>

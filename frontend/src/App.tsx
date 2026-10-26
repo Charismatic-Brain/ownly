@@ -16,6 +16,8 @@ import { FamilyPage } from './pages/FamilyPage';
 import { ActivityPage } from './pages/ActivityPage';
 import { SettingsPage } from './pages/SettingsPage';
 
+import { LandingPage } from './pages/LandingPage';
+
 const queryClient = new QueryClient();
 
 export function App() {
@@ -24,30 +26,31 @@ export function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public auth routes */}
+            {/* Public landing and auth routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
             {/* Protected application shell */}
             <Route
-              path="/"
               element={
                 <ProtectedRoute>
                   <Layout />
                 </ProtectedRoute>
               }
             >
-              <Route index element={<DashboardPage />} />
-              <Route path="vault" element={<VaultPage />} />
-              <Route path="finance" element={<FinancePage />} />
-              <Route path="memories" element={<MemoriesPage />} />
-              <Route path="family" element={<FamilyPage />} />
-              <Route path="reminders" element={<RemindersPage />} />
-              <Route path="activity" element={<ActivityPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="search" element={<SearchPage />} />
-              <Route path="trash" element={<TrashPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/vault" element={<VaultPage />} />
+              <Route path="/finance" element={<FinancePage />} />
+              <Route path="/memories" element={<MemoriesPage />} />
+              <Route path="/family" element={<FamilyPage />} />
+              <Route path="/reminders" element={<RemindersPage />} />
+              <Route path="/activity" element={<ActivityPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/trash" element={<TrashPage />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>
         </BrowserRouter>

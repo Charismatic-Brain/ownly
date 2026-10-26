@@ -81,11 +81,11 @@ export const FinancePage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-            <Wallet className="w-6 h-6 text-brand-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center space-x-2.5">
+            <Wallet className="w-6 h-6 text-brand-700" />
             <span>Finance & Bills</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             Track manual income, expenses, and recurring bills with exact integer minor-unit math.
           </p>
         </div>
@@ -93,14 +93,14 @@ export const FinancePage: React.FC = () => {
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setIsBillModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-200 transition-colors"
           >
             <Calendar className="w-3.5 h-3.5" />
             <span>+ Add Bill</span>
           </button>
           <button
             onClick={() => setIsTxnModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-brand-600/20"
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-sm "
           >
             <Plus className="w-4 h-4" />
             <span>+ Add Transaction</span>
@@ -111,38 +111,38 @@ export const FinancePage: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Total Income */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase">
+        <div className="p-4 rounded-xl bg-white border border-slate-200/80">
+          <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold uppercase">
             <span>Total Income</span>
             <ArrowDownLeft className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-slate-900 mt-2">
             {summaryLoading ? '...' : formatCurrency(summary?.totalIncome || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">Recorded cash inflows</p>
         </div>
 
         {/* Total Expenses */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-rose-400 font-semibold uppercase">
+        <div className="p-4 rounded-xl bg-white border border-slate-200/80">
+          <div className="flex items-center justify-between text-xs text-rose-700 font-semibold uppercase">
             <span>Total Expenses</span>
             <ArrowUpRight className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-slate-900 mt-2">
             {summaryLoading ? '...' : formatCurrency(summary?.totalExpense || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">Recorded outflows</p>
         </div>
 
         {/* Net Savings */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-brand-400 font-semibold uppercase">
+        <div className="p-4 rounded-xl bg-white border border-slate-200/80">
+          <div className="flex items-center justify-between text-xs text-brand-700 font-semibold uppercase">
             <span>Net Savings</span>
             <PiggyBank className="w-4 h-4" />
           </div>
           <p
             className={`text-2xl font-bold mt-2 ${
-              (summary?.netSavings || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'
+              (summary?.netSavings || 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'
             }`}
           >
             {summaryLoading ? '...' : formatCurrency(summary?.netSavings || 0)}
@@ -151,12 +151,12 @@ export const FinancePage: React.FC = () => {
         </div>
 
         {/* Upcoming Active Bills */}
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-          <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase">
+        <div className="p-4 rounded-xl bg-white border border-slate-200/80">
+          <div className="flex items-center justify-between text-xs text-amber-700 font-semibold uppercase">
             <span>Upcoming Bills</span>
             <CreditCard className="w-4 h-4" />
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-slate-900 mt-2">
             {summaryLoading ? '...' : formatCurrency(summary?.upcomingBillsTotal || 0)}
           </p>
           <p className="text-[11px] text-slate-500 mt-0.5">
@@ -167,9 +167,9 @@ export const FinancePage: React.FC = () => {
 
       {/* Category Breakdown Progress Bars */}
       {summary && summary.categoryBreakdown.length > 0 && (
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+        <div className="p-5 rounded-xl bg-white border border-slate-200/80 space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Spending Breakdown by Category
             </h3>
             <span className="text-xs text-slate-500">
@@ -179,13 +179,13 @@ export const FinancePage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {summary.categoryBreakdown.map((cat) => (
-              <div key={cat.category} className="p-3 rounded-lg bg-slate-850/60 border border-slate-800 space-y-1.5">
+              <div key={cat.category} className="p-3 rounded-lg bg-slate-50/80 border border-slate-200/80 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-200">{cat.category}</span>
-                  <span className="font-bold text-white">{formatCurrency(cat.totalAmount)}</span>
+                  <span className="font-semibold text-slate-800">{cat.category}</span>
+                  <span className="font-bold text-slate-900">{formatCurrency(cat.totalAmount)}</span>
                 </div>
                 {/* Progress bar */}
-                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
                     className="bg-brand-500 h-full rounded-full transition-all"
                     style={{ width: `${Math.min(cat.percentage, 100)}%` }}
@@ -202,14 +202,14 @@ export const FinancePage: React.FC = () => {
       )}
 
       {/* View Tabs */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
         <div className="flex items-center space-x-1">
           <button
             onClick={() => setActiveTab('transactions')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
               activeTab === 'transactions'
                 ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Transactions ({transactions.length})
@@ -219,7 +219,7 @@ export const FinancePage: React.FC = () => {
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
               activeTab === 'bills'
                 ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Bills & Subscriptions ({bills.length})
@@ -227,7 +227,7 @@ export const FinancePage: React.FC = () => {
         </div>
 
         {activeTab === 'transactions' && (
-          <div className="flex items-center space-x-1 bg-slate-850 p-1 rounded-xl border border-slate-750">
+          <div className="flex items-center space-x-1 bg-slate-50/80 p-1 rounded-xl border border-slate-200">
             {[
               { label: 'All', val: '' },
               { label: 'Expenses', val: 'expense' },
@@ -239,7 +239,7 @@ export const FinancePage: React.FC = () => {
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                   typeFilter === t.val
                     ? 'bg-brand-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 {t.label}
@@ -253,24 +253,24 @@ export const FinancePage: React.FC = () => {
       {activeTab === 'transactions' && (
         <div className="space-y-3">
           {txnsLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
+            <div className="p-16 text-center text-slate-500 space-y-3">
               <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading transactions...</p>
             </div>
           )}
 
           {!txnsLoading && transactions.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Wallet className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-slate-200/80 bg-slate-50/80 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                <Wallet className="w-6 h-6 text-brand-700" />
               </div>
-              <h4 className="text-base font-semibold text-white">No transactions found</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
+              <h4 className="text-base font-semibold text-slate-900">No transactions found</h4>
+              <p className="text-xs text-slate-500 max-w-sm">
                 Log income or expenses to track your spending trends and budget summaries.
               </p>
               <button
                 onClick={() => setIsTxnModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="mt-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 text-xs font-semibold border border-slate-200"
               >
                 + Add Transaction
               </button>
@@ -283,25 +283,25 @@ export const FinancePage: React.FC = () => {
               return (
                 <div
                   key={txn.id}
-                  className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-4 hover:border-slate-750 transition-colors"
+                  className="bg-white border border-slate-200/80 rounded-xl p-4 flex items-center justify-between gap-4 hover:border-slate-300 transition-colors"
                 >
                   <div className="flex items-center space-x-3 truncate">
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
                         isIncome
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200/60'
                       }`}
                     >
                       {isIncome ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                     </div>
                     <div className="truncate">
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm font-semibold text-white truncate">
+                        <span className="text-sm font-semibold text-slate-900 truncate">
                           {txn.category}
                         </span>
                         {txn.description && (
-                          <span className="text-xs text-slate-400 truncate">
+                          <span className="text-xs text-slate-500 truncate">
                             • {txn.description}
                           </span>
                         )}
@@ -315,14 +315,14 @@ export const FinancePage: React.FC = () => {
                   <div className="flex items-center space-x-3 flex-shrink-0">
                     <span
                       className={`text-sm font-bold ${
-                        isIncome ? 'text-emerald-400' : 'text-slate-200'
+                        isIncome ? 'text-emerald-700' : 'text-slate-800'
                       }`}
                     >
                       {isIncome ? '+' : '-'}{formatCurrency(txn.amount)}
                     </span>
                     <button
                       onClick={() => deleteTxnMutation.mutate(txn.id)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-800 hover:bg-slate-100 transition-colors"
                       title="Delete transaction"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -338,24 +338,24 @@ export const FinancePage: React.FC = () => {
       {activeTab === 'bills' && (
         <div className="space-y-3">
           {billsLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
+            <div className="p-16 text-center text-slate-500 space-y-3">
               <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading bills...</p>
             </div>
           )}
 
           {!billsLoading && bills.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <CreditCard className="w-6 h-6 text-amber-400" />
+            <div className="rounded-2xl border border-dashed border-slate-200/80 bg-slate-50/80 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                <CreditCard className="w-6 h-6 text-amber-700" />
               </div>
-              <h4 className="text-base font-semibold text-white">No recurring bills set up</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
+              <h4 className="text-base font-semibold text-slate-900">No recurring bills set up</h4>
+              <p className="text-xs text-slate-500 max-w-sm">
                 Add subscriptions, rent, or utilities to receive upcoming due date alerts.
               </p>
               <button
                 onClick={() => setIsBillModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="mt-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 text-xs font-semibold border border-slate-200"
               >
                 + Add Recurring Bill
               </button>
@@ -366,37 +366,37 @@ export const FinancePage: React.FC = () => {
             bills.map((bill) => (
               <div
                 key={bill.id}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-white border border-slate-200/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-semibold text-white">{bill.name}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-brand-500/10 text-brand-400">
+                    <span className="text-sm font-semibold text-slate-900">{bill.name}</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-brand-50 text-brand-700">
                       {bill.frequency}
                     </span>
-                    <span className="text-xs text-slate-400">• {bill.category}</span>
+                    <span className="text-xs text-slate-500">• {bill.category}</span>
                   </div>
                   <div className="flex items-center space-x-3 text-[11px] text-slate-500">
                     <span>Next Due: {new Date(bill.nextDueAt).toLocaleDateString()}</span>
-                    {bill.autopay && <span className="text-emerald-400 font-medium">Autopay Active</span>}
+                    {bill.autopay && <span className="text-emerald-700 font-medium">Autopay Active</span>}
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-3 flex-shrink-0">
-                  <span className="text-base font-bold text-white">
+                  <span className="text-base font-bold text-slate-900">
                     {formatCurrency(bill.amount)}
                   </span>
                   <button
                     onClick={() => payBillMutation.mutate(bill.id)}
                     disabled={payBillMutation.isPending}
-                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-400 text-xs font-semibold border border-emerald-500/20 transition-colors disabled:opacity-50"
+                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-200 text-emerald-700 text-xs font-semibold border border-emerald-200/60 transition-colors disabled:opacity-50"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Mark Paid</span>
                   </button>
                   <button
                     onClick={() => deleteBillMutation.mutate(bill.id)}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-800 hover:bg-slate-100 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -475,18 +475,18 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h2 className="text-base font-semibold text-white">Add Transaction</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200/80 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80">
+          <h2 className="text-base font-semibold text-slate-900">Add Transaction</h2>
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-500 hover:text-slate-900">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200/60 text-rose-700 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -499,8 +499,8 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               onClick={() => setType('expense')}
               className={`py-2 text-xs font-semibold rounded-xl border transition-colors ${
                 type === 'expense'
-                  ? 'bg-rose-600/20 border-rose-500/40 text-rose-400'
-                  : 'bg-slate-850 border-slate-750 text-slate-400'
+                  ? 'bg-rose-100 border-rose-200/60 text-rose-700'
+                  : 'bg-slate-50/80 border-slate-200 text-slate-500'
               }`}
             >
               Expense (-)
@@ -510,8 +510,8 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               onClick={() => setType('income')}
               className={`py-2 text-xs font-semibold rounded-xl border transition-colors ${
                 type === 'income'
-                  ? 'bg-emerald-600/20 border-emerald-500/40 text-emerald-400'
-                  : 'bg-slate-850 border-slate-750 text-slate-400'
+                  ? 'bg-emerald-100 border-emerald-200/60 text-emerald-700'
+                  : 'bg-slate-50/80 border-slate-200 text-slate-500'
               }`}
             >
               Income (+)
@@ -520,7 +520,7 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
 
           {/* Amount */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Amount (INR)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Amount (INR)</label>
             <input
               type="number"
               step="0.01"
@@ -528,51 +528,51 @@ const AddTransactionModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Category</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Category</label>
             <input
               type="text"
               required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               placeholder="e.g. Groceries, Rent, Salary, Travel, Utilities"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Description</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes or merchant name"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           {/* Occurred At */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Date (Optional)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Date (Optional)</label>
             <input
               type="date"
               value={occurredAt}
               onChange={(e) => setOccurredAt(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-3 border-t border-slate-200/80 flex justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900"
             >
               Cancel
             </button>
@@ -633,37 +633,37 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h2 className="text-base font-semibold text-white">Add Recurring Bill</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200/80 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80">
+          <h2 className="text-base font-semibold text-slate-900">Add Recurring Bill</h2>
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-500 hover:text-slate-900">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200/60 text-rose-700 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Bill Name</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Bill Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Home Wi-Fi, Electricity, Netflix, Gym"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Amount (INR)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Amount (INR)</label>
             <input
               type="number"
               step="0.01"
@@ -671,17 +671,17 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Frequency</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1.5">Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as BillFrequency)}
-                className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+                className="field w-full px-3 py-2 text-sm"
               >
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
@@ -691,25 +691,25 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Category</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1.5">Category</label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Utilities"
-                className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="field w-full px-3 py-2 text-sm"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Next Due Date</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Next Due Date</label>
             <input
               type="date"
               required
               value={nextDueAt}
               onChange={(e) => setNextDueAt(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
@@ -719,18 +719,18 @@ const AddBillModal: React.FC<ModalProps> = ({ onClose, onSuccess }) => {
               id="autopay"
               checked={autopay}
               onChange={(e) => setAutopay(e.target.checked)}
-              className="rounded bg-slate-800 border-slate-700 text-brand-600 focus:ring-brand-500"
+              className="rounded bg-slate-100 border-slate-200 text-brand-600 focus:ring-brand-500"
             />
-            <label htmlFor="autopay" className="text-xs text-slate-300">
+            <label htmlFor="autopay" className="text-xs text-slate-700">
               Autopay enabled via credit card / standing order
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-3 border-t border-slate-200/80 flex justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900"
             >
               Cancel
             </button>

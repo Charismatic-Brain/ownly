@@ -84,27 +84,27 @@ export const MemoriesPage: React.FC = () => {
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setSelectedAlbumId(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                 title="Back to albums"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2">
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center space-x-2">
                   <span>{selectedAlbum?.title || 'Album Details'}</span>
                 </h1>
                 {selectedAlbum?.description && (
-                  <p className="text-xs text-slate-400 mt-0.5">{selectedAlbum.description}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{selectedAlbum.description}</p>
                 )}
               </div>
             </div>
           ) : (
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2.5">
-                <Image className="w-6 h-6 text-brand-400" />
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center space-x-2.5">
+                <Image className="w-6 h-6 text-brand-700" />
                 <span>Memories & Media Vault</span>
               </h1>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Private, secure photo & video albums stored in encrypted MongoDB GridFS.
               </p>
             </div>
@@ -114,7 +114,7 @@ export const MemoriesPage: React.FC = () => {
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-200 transition-colors"
           >
             <Upload className="w-3.5 h-3.5" />
             <span>Upload Media</span>
@@ -122,7 +122,7 @@ export const MemoriesPage: React.FC = () => {
           {!selectedAlbumId && (
             <button
               onClick={() => setIsAlbumModalOpen(true)}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-brand-600/20"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors shadow-sm "
             >
               <Plus className="w-4 h-4" />
               <span>+ New Album</span>
@@ -131,7 +131,7 @@ export const MemoriesPage: React.FC = () => {
           {selectedAlbumId && selectedAlbum && (
             <button
               onClick={() => handleDeleteAlbum(selectedAlbum.id, selectedAlbum.title)}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors border border-slate-800"
+              className="p-2 rounded-xl text-slate-500 hover:text-rose-800 hover:bg-slate-100 transition-colors border border-slate-200/80"
               title="Delete album"
             >
               <Trash2 className="w-4 h-4" />
@@ -142,13 +142,13 @@ export const MemoriesPage: React.FC = () => {
 
       {/* Main Tabs (only when not drilling into an album) */}
       {!selectedAlbumId && (
-        <div className="flex items-center space-x-1 border-b border-slate-800 pb-2">
+        <div className="flex items-center space-x-1 border-b border-slate-200/80 pb-2">
           <button
             onClick={() => setActiveTab('albums')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
               activeTab === 'albums'
                 ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             Albums ({albums.length})
@@ -158,7 +158,7 @@ export const MemoriesPage: React.FC = () => {
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
               activeTab === 'timeline'
                 ? 'bg-brand-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             All Media Timeline
@@ -170,24 +170,24 @@ export const MemoriesPage: React.FC = () => {
       {selectedAlbumId && (
         <div className="space-y-6">
           {albumDetailLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
+            <div className="p-16 text-center text-slate-500 space-y-3">
               <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading album photos...</p>
             </div>
           )}
 
           {!albumDetailLoading && (!selectedAlbum?.media || selectedAlbum.media.length === 0) && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Image className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-slate-200/80 bg-slate-50/80 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                <Image className="w-6 h-6 text-brand-700" />
               </div>
-              <h4 className="text-base font-semibold text-white">This album is empty</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
+              <h4 className="text-base font-semibold text-slate-900">This album is empty</h4>
+              <p className="text-xs text-slate-500 max-w-sm">
                 Add photos or videos to this private album.
               </p>
               <button
                 onClick={() => setIsUploadModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="mt-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 text-xs font-semibold border border-slate-200"
               >
                 Upload First Photo
               </button>
@@ -200,11 +200,11 @@ export const MemoriesPage: React.FC = () => {
                 <div
                   key={media.id}
                   onClick={() => setLightboxMedia(media)}
-                  className="group relative aspect-square bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-brand-500 cursor-pointer shadow-md transition-all"
+                  className="group relative aspect-square bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-brand-500 cursor-pointer shadow-md transition-all"
                 >
                   {isVideo(media.mimeType) ? (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400">
-                      <Play className="w-8 h-8 text-brand-400 mb-1" />
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-500">
+                      <Play className="w-8 h-8 text-brand-700 mb-1" />
                       <span className="text-[10px] uppercase font-bold">Video</span>
                     </div>
                   ) : (
@@ -215,11 +215,11 @@ export const MemoriesPage: React.FC = () => {
                     />
                   )}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2.5">
-                    <p className="text-xs font-semibold text-white truncate">
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2.5">
+                    <p className="text-xs font-semibold text-slate-900 truncate">
                       {media.caption || media.originalName}
                     </p>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-slate-500">
                       {new Date(media.takenAt || media.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -234,24 +234,24 @@ export const MemoriesPage: React.FC = () => {
       {!selectedAlbumId && activeTab === 'albums' && (
         <div className="space-y-6">
           {albumsLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
+            <div className="p-16 text-center text-slate-500 space-y-3">
               <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading albums...</p>
             </div>
           )}
 
           {!albumsLoading && albums.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Sparkles className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-slate-200/80 bg-slate-50/80 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                <Sparkles className="w-6 h-6 text-brand-700" />
               </div>
-              <h4 className="text-base font-semibold text-white">No albums created yet</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
+              <h4 className="text-base font-semibold text-slate-900">No albums created yet</h4>
+              <p className="text-xs text-slate-500 max-w-sm">
                 Create albums to curate memorable trips, family milestones, and personal moments.
               </p>
               <button
                 onClick={() => setIsAlbumModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="mt-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 text-xs font-semibold border border-slate-200"
               >
                 + Create First Album
               </button>
@@ -264,10 +264,10 @@ export const MemoriesPage: React.FC = () => {
                 <div
                   key={album.id}
                   onClick={() => setSelectedAlbumId(album.id)}
-                  className="group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden cursor-pointer transition-all duration-150 hover:shadow-xl hover:shadow-black/30 flex flex-col"
+                  className="group bg-white border border-slate-200/80 hover:border-slate-300 rounded-2xl overflow-hidden cursor-pointer transition-all duration-150 hover:shadow-xl hover:shadow-black/30 flex flex-col"
                 >
                   {/* Cover image or placeholder */}
-                  <div className="aspect-[4/3] bg-slate-950 relative overflow-hidden flex items-center justify-center">
+                  <div className="aspect-[4/3] bg-slate-50 relative overflow-hidden flex items-center justify-center">
                     {album.coverMediaId ? (
                       <img
                         src={`/api/media/${album.coverMediaId}/preview`}
@@ -275,32 +275,32 @@ export const MemoriesPage: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-slate-600">
+                      <div className="flex flex-col items-center justify-center text-slate-400">
                         <Image className="w-10 h-10 mb-1" />
                         <span className="text-[11px]">No Cover Photo</span>
                       </div>
                     )}
-                    <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[10px] font-bold text-white border border-white/10">
+                    <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-white/90 backdrop-blur-sm text-[10px] font-bold text-slate-700 border border-slate-200/80">
                       {album.mediaCount} {album.mediaCount === 1 ? 'item' : 'items'}
                     </div>
                   </div>
 
                   <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="text-sm font-bold text-white group-hover:text-brand-400 transition-colors truncate">
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-brand-800 transition-colors truncate">
                         {album.title}
                       </h3>
                       {album.description && (
-                        <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">
                           {album.description}
                         </p>
                       )}
                     </div>
 
-                    <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+                    <div className="mt-3 pt-2.5 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
                       <span>{new Date(album.createdAt).toLocaleDateString()}</span>
                       {album.tags && album.tags.length > 0 && (
-                        <span className="text-brand-400 truncate">#{album.tags[0]}</span>
+                        <span className="text-brand-700 truncate">#{album.tags[0]}</span>
                       )}
                     </div>
                   </div>
@@ -315,24 +315,24 @@ export const MemoriesPage: React.FC = () => {
       {!selectedAlbumId && activeTab === 'timeline' && (
         <div className="space-y-6">
           {timelineLoading && (
-            <div className="p-16 text-center text-slate-400 space-y-3">
+            <div className="p-16 text-center text-slate-500 space-y-3">
               <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading media timeline...</p>
             </div>
           )}
 
           {!timelineLoading && (!timelineData?.groups || timelineData.groups.length === 0) && (
-            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-16 text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
-                <Calendar className="w-6 h-6 text-brand-400" />
+            <div className="rounded-2xl border border-dashed border-slate-200/80 bg-slate-50/80 p-16 text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                <Calendar className="w-6 h-6 text-brand-700" />
               </div>
-              <h4 className="text-base font-semibold text-white">No photos or videos yet</h4>
-              <p className="text-xs text-slate-400 max-w-sm">
+              <h4 className="text-base font-semibold text-slate-900">No photos or videos yet</h4>
+              <p className="text-xs text-slate-500 max-w-sm">
                 Upload photos and videos to see your life's chronological media stream.
               </p>
               <button
                 onClick={() => setIsUploadModalOpen(true)}
-                className="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-brand-400 text-xs font-semibold border border-slate-700"
+                className="mt-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 text-xs font-semibold border border-slate-200"
               >
                 Upload Photo
               </button>
@@ -342,9 +342,9 @@ export const MemoriesPage: React.FC = () => {
           {!timelineLoading &&
             timelineData?.groups.map((group) => (
               <div key={group.period} className="space-y-3">
-                <div className="flex items-center space-x-2 border-b border-slate-800 pb-2">
-                  <Calendar className="w-4 h-4 text-brand-400" />
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                <div className="flex items-center space-x-2 border-b border-slate-200/80 pb-2">
+                  <Calendar className="w-4 h-4 text-brand-700" />
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                     {group.period}
                   </h3>
                   <span className="text-xs text-slate-500">({group.items.length})</span>
@@ -355,11 +355,11 @@ export const MemoriesPage: React.FC = () => {
                     <div
                       key={media.id}
                       onClick={() => setLightboxMedia(media)}
-                      className="group relative aspect-square bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-brand-500 cursor-pointer shadow-md transition-all"
+                      className="group relative aspect-square bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-brand-500 cursor-pointer shadow-md transition-all"
                     >
                       {isVideo(media.mimeType) ? (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400">
-                          <Play className="w-6 h-6 text-brand-400 mb-1" />
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-500">
+                          <Play className="w-6 h-6 text-brand-700 mb-1" />
                           <span className="text-[9px] uppercase font-bold">Video</span>
                         </div>
                       ) : (
@@ -370,8 +370,8 @@ export const MemoriesPage: React.FC = () => {
                         />
                       )}
 
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
-                        <p className="text-[11px] font-semibold text-white truncate">
+                      <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
+                        <p className="text-[11px] font-semibold text-slate-900 truncate">
                           {media.caption || media.originalName}
                         </p>
                       </div>
@@ -385,16 +385,16 @@ export const MemoriesPage: React.FC = () => {
 
       {/* Lightbox Modal */}
       {lightboxMedia && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in">
-          <div className="relative max-w-4xl w-full max-h-[90vh] flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-fade-in">
+          <div className="relative max-w-4xl w-full max-h-[90vh] flex flex-col bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-2xl">
             {/* Top Bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/90">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 bg-slate-50/80">
               <div className="flex items-center space-x-2 truncate">
-                <span className="text-xs font-semibold text-white truncate">
+                <span className="text-xs font-semibold text-slate-900 truncate">
                   {lightboxMedia.originalName}
                 </span>
                 {lightboxMedia.albumTitle && (
-                  <span className="text-[11px] text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded">
+                  <span className="text-[11px] text-brand-700 bg-brand-50 px-2 py-0.5 rounded">
                     {lightboxMedia.albumTitle}
                   </span>
                 )}
@@ -404,7 +404,7 @@ export const MemoriesPage: React.FC = () => {
                 <a
                   href={lightboxMedia.downloadUrl}
                   download={lightboxMedia.originalName}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                   title="Download media"
                 >
                   <Download className="w-4 h-4" />
@@ -415,14 +415,14 @@ export const MemoriesPage: React.FC = () => {
                       deleteMediaMutation.mutate(lightboxMedia.id);
                     }
                   }}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-rose-800 hover:bg-slate-100 transition-colors"
                   title="Delete media"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setLightboxMedia(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -430,7 +430,7 @@ export const MemoriesPage: React.FC = () => {
             </div>
 
             {/* Media Canvas */}
-            <div className="flex-1 bg-black flex items-center justify-center p-2 overflow-hidden min-h-[300px]">
+            <div className="flex-1 bg-slate-100 flex items-center justify-center p-2 overflow-hidden min-h-[300px]">
               {isVideo(lightboxMedia.mimeType) ? (
                 <video
                   src={lightboxMedia.previewUrl}
@@ -448,8 +448,8 @@ export const MemoriesPage: React.FC = () => {
             </div>
 
             {/* Bottom Caption / Info */}
-            <div className="p-4 bg-slate-900 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <p className="italic text-slate-300 truncate">
+            <div className="p-4 bg-white border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
+              <p className="italic text-slate-700 truncate">
                 {lightboxMedia.caption || 'No caption provided'}
               </p>
               <span>
@@ -526,62 +526,62 @@ const CreateAlbumModal: React.FC<AlbumModalProps> = ({ onClose, onSuccess }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h2 className="text-base font-semibold text-white">Create New Album</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200/80 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80">
+          <h2 className="text-base font-semibold text-slate-900">Create New Album</h2>
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-500 hover:text-slate-900">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200/60 text-rose-700 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Album Title</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Album Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Summer Vacation, Birthday 2026, Family Gathering"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Description</label>
             <textarea
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes or details about this album..."
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Tags (comma separated)</label>
             <input
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="vacation, family, beach"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-3 border-t border-slate-200/80 flex justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900"
             >
               Cancel
             </button>
@@ -649,29 +649,29 @@ const UploadMediaModal: React.FC<UploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h2 className="text-base font-semibold text-white">Upload Photo or Video</h2>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200/80 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80">
+          <h2 className="text-base font-semibold text-slate-900">Upload Photo or Video</h2>
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-500 hover:text-slate-900">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200/60 text-rose-700 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Select Album (Optional)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Select Album (Optional)</label>
             <select
               value={selectedAlbumId}
               onChange={(e) => setSelectedAlbumId(e.target.value)}
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3 py-2 text-sm"
             >
               <option value="">-- No album (General Timeline) --</option>
               {albums.map((a) => (
@@ -683,43 +683,43 @@ const UploadMediaModal: React.FC<UploadModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">File (Image or Video, max 50 MB)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">File (Image or Video, max 50 MB)</label>
             <input
               type="file"
               required
               accept="image/*,video/mp4,video/webm"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-brand-400 hover:file:bg-slate-750 cursor-pointer"
+              className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-brand-700 hover:file:bg-slate-200 cursor-pointer"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Caption</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Caption</label>
             <input
               type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="e.g. Sunset at the resort"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">Tags (comma separated)</label>
             <input
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="beach, sunset, holiday"
-              className="w-full bg-slate-850 border border-slate-750 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              className="field w-full px-3.5 py-2 text-sm"
             />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+          <div className="pt-3 border-t border-slate-200/80 flex justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white"
+              className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900"
             >
               Cancel
             </button>

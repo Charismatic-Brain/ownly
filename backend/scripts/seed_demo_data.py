@@ -16,7 +16,15 @@ from app.db.indexes import create_indexes
 
 async def seed_data():
     print(f"Connecting to MongoDB at {settings.MONGODB_URI} (db: {settings.MONGODB_DATABASE})...")
-    client = AsyncIOMotorClient(settings.MONGODB_URI)
+    client_kwargs = {}
+    try:
+        import certifi
+        uri_lower = settings.MONGODB_URI.lower()
+        if "+srv" in uri_lower or "tls=true" in uri_lower or "ssl=true" in uri_lower:
+            client_kwargs["tlsCAFile"] = certifi.where()
+    except ImportError:
+        pass
+    client = AsyncIOMotorClient(settings.MONGODB_URI, **client_kwargs)
     db = client[settings.MONGODB_DATABASE]
 
     print("Ensuring database indexes...")

@@ -99,35 +99,35 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
     switch (item.kind) {
       case 'file':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-500/15 text-brand-400 border border-brand-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200/80">
             <Paperclip className="w-3 h-3" />
             <span>File</span>
           </span>
         );
       case 'note':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
             <FileText className="w-3 h-3" />
             <span>Note</span>
           </span>
         );
       case 'link':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200/80">
             <LinkIcon className="w-3 h-3" />
             <span>Link</span>
           </span>
         );
       case 'record':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200/80">
             <Layers className="w-3 h-3" />
             <span>Record</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
             <span>{item.kind}</span>
           </span>
         );
@@ -135,33 +135,33 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-xl shadow-2xl shadow-black/60 overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-in fade-in duration-150">
+      <div className="bg-white border border-black/[0.08] rounded-3xl w-full max-w-xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] overflow-hidden my-8">
         {/* Header */}
-        <div className="flex items-start justify-between px-6 py-5 border-b border-slate-800 bg-slate-850/50">
+        <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/70">
           <div className="space-y-1.5 pr-4">
             <div className="flex items-center space-x-2">
               {getKindBadge()}
               {collection && (
-                <span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs text-slate-600 bg-slate-200/70 font-medium px-2.5 py-0.5 rounded-full">
                   {collection.name}
                 </span>
               )}
             </div>
-            <h3 className="text-xl font-bold text-white leading-snug">{item.title}</h3>
+            <h3 className="text-xl font-bold text-slate-900 leading-snug tracking-tight">{item.title}</h3>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={() => onToggleFavorite(item.id)}
-              className="p-2 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-500 hover:text-amber-800 hover:bg-slate-100 transition-colors"
               title="Toggle Favorite"
             >
-              <Star className={`w-5 h-5 ${item.favorite ? 'fill-amber-400 text-amber-400' : ''}`} />
+              <Star className={`w-5 h-5 ${item.favorite ? 'fill-amber-400 text-amber-600' : ''}`} />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -173,21 +173,21 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Description */}
           {item.description && (
             <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-1">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
                 Description
               </h4>
-              <p className="text-sm text-slate-200">{item.description}</p>
+              <p className="text-sm text-slate-700 leading-relaxed">{item.description}</p>
             </div>
           )}
 
           {/* Attached files */}
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3">
-              <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-                <Paperclip className="h-4 w-4 text-brand-300" />
+              <h4 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <Paperclip className="h-4 w-4 text-teal-600" />
                 Attached files
                 {item.files && item.files.length > 0 && (
-                  <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-xs font-medium tabular-nums text-slate-400">
+                  <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-xs font-medium tabular-nums text-slate-600">
                     {item.files.length}
                   </span>
                 )}
@@ -205,7 +205,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingAttachment}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs font-semibold text-brand-300 transition-colors hover:bg-white/[0.06] hover:text-brand-200 disabled:opacity-50"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300 shadow-xs disabled:opacity-50"
                 >
                   {uploadingAttachment ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -224,14 +224,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   return (
                     <li
                       key={file.id}
-                      className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-slate-950/60 p-3"
+                      className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-3"
                     >
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-500/10 text-brand-300 ring-1 ring-inset ring-brand-400/20">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-200/80">
                         <FileTypeIcon className="h-[18px] w-[18px]" />
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-white" title={file.originalName}>
+                        <p className="truncate text-sm font-semibold text-slate-900" title={file.originalName}>
                           {file.originalName}
                         </p>
                         <p className="mt-0.5 truncate text-xs text-slate-500">
@@ -239,10 +239,10 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </p>
                       </div>
 
-                      <div className="flex shrink-0 items-center gap-0.5">
+                      <div className="flex shrink-0 items-center gap-1">
                         <button
                           onClick={() => vaultApi.downloadFile(file.id, file.originalName, true)}
-                          className="icon-btn hover:text-brand-300"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
                           title="Preview"
                           aria-label={`Preview ${file.originalName}`}
                         >
@@ -250,7 +250,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </button>
                         <button
                           onClick={() => vaultApi.downloadFile(file.id, file.originalName, false)}
-                          className="icon-btn"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
                           title="Download"
                           aria-label={`Download ${file.originalName}`}
                         >
@@ -258,7 +258,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </button>
                         <button
                           onClick={() => handleDeleteAttachment(file.id)}
-                          className="icon-btn hover:text-rose-300"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                           title="Delete"
                           aria-label={`Delete ${file.originalName}`}
                         >
@@ -270,7 +270,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                 })}
               </ul>
             ) : (
-              <p className="rounded-xl border border-dashed border-white/10 px-4 py-5 text-center text-sm text-slate-500">
+              <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/40 px-4 py-5 text-center text-sm text-slate-500">
                 No files attached yet.
               </p>
             )}
@@ -280,18 +280,18 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {item.kind === 'note' && item.content && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <h4 className="text-sm font-semibold text-slate-200">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Content
                 </h4>
                 <button
                   onClick={() => handleCopy(item.content!)}
-                  className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-brand-400 transition-colors"
+                  className="inline-flex items-center space-x-1 text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap font-mono text-xs leading-relaxed">
+              <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed shadow-inner">
                 {item.content}
               </div>
             </div>
@@ -300,14 +300,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Link URL */}
           {item.kind === 'link' && item.url && (
             <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-1.5">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
                 Target Link
               </h4>
               <a
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-brand-500/50 text-brand-400 text-sm font-medium transition-colors w-full break-all"
+                className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-2xl bg-sky-50/70 border border-sky-200/80 hover:bg-sky-50 text-sky-800 text-sm font-medium transition-colors w-full break-all"
               >
                 <ExternalLink className="w-4 h-4 flex-shrink-0" />
                 <span>{item.url}</span>
@@ -318,14 +318,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Record custom fields */}
           {item.kind === 'record' && Object.keys(item.customFields || {}).length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
                 Custom Fields
               </h4>
-              <div className="rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
+              <div className="rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-100 bg-white">
                 {Object.entries(item.customFields).map(([k, v]) => (
-                  <div key={k} className="flex justify-between p-3 text-xs bg-slate-950/40">
-                    <span className="font-semibold text-slate-400">{k}</span>
-                    <span className="text-white font-mono">{String(v)}</span>
+                  <div key={k} className="flex justify-between p-3 text-xs bg-white odd:bg-slate-50/50">
+                    <span className="font-semibold text-slate-600">{k}</span>
+                    <span className="text-slate-900 font-mono">{String(v)}</span>
                   </div>
                 ))}
               </div>
@@ -335,7 +335,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Tags */}
           {item.tags && item.tags.length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-slate-200 mb-2 flex items-center space-x-1">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center space-x-1">
                 <Tag className="w-3.5 h-3.5" />
                 <span>Tags</span>
               </h4>
@@ -343,7 +343,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-750"
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/80"
                   >
                     #{tag}
                   </span>
@@ -353,13 +353,13 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           )}
 
           {/* Metadata & Dates */}
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800 text-xs text-slate-400">
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100 text-xs text-slate-500">
             {item.eventDate && (
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4 text-slate-500" />
                 <div>
-                  <span className="block text-[11px] text-slate-500">Event date</span>
-                  <span className="text-slate-300">{new Date(item.eventDate).toLocaleDateString()}</span>
+                  <span className="block text-[11px] font-medium uppercase tracking-wider text-slate-500">Event date</span>
+                  <span className="text-slate-700 font-medium">{new Date(item.eventDate).toLocaleDateString()}</span>
                 </div>
               </div>
             )}
@@ -367,8 +367,8 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-slate-500" />
                 <div>
-                  <span className="block text-[11px] text-slate-500">Expires</span>
-                  <span className="text-amber-400 font-semibold">{new Date(item.expiresAt).toLocaleDateString()}</span>
+                  <span className="block text-[11px] font-medium uppercase tracking-wider text-slate-500">Expires</span>
+                  <span className="text-amber-600 font-semibold">{new Date(item.expiresAt).toLocaleDateString()}</span>
                 </div>
               </div>
             )}
@@ -379,11 +379,11 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800 bg-slate-850/50">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/70">
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setShareOpen(true)}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-brand-400 hover:text-white hover:bg-brand-500/20 border border-brand-500/30 transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200/90 hover:bg-slate-50 shadow-xs transition-colors"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Share</span>
@@ -391,7 +391,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-600/80 transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 bg-white border border-rose-200/80 hover:bg-rose-50 shadow-xs transition-colors"
             >
               <Trash2 className="w-4 h-4" />
               <span>Move to Trash</span>
@@ -400,7 +400,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
           >
             Close
           </button>
